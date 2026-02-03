@@ -347,7 +347,7 @@ function initPageAnimations() {
 }
 
 // ============================================
-// WORK HOVER ACCORDION
+// WORK HOVER ACCORDION (Desktop) + TOUCH HANDLING (Mobile)
 // ============================================
 const workCards = document.querySelectorAll('.work-card');
 
@@ -355,14 +355,54 @@ if (workCards.length > 0) {
     // Set initial state
     workCards[0].classList.add('active');
 
-    workCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            // Deactivate all others
-            workCards.forEach(c => c.classList.remove('active'));
-            // Activate current
-            card.classList.add('active');
+    // Check if touch device
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    if (isMobile) {
+        // Mobile: Use IntersectionObserver to activate cards as they scroll into view
+        // Remove initial active state since all cards show info on mobile
+        workCards.forEach(c => c.classList.remove('active'));
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-30% 0px -30% 0px', // Trigger when card is in middle 40% of viewport
+            threshold: 0
+        };
+
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Optional: Add subtle visual feedback when card is in center
+                    entry.target.classList.add('in-view');
+                } else {
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        }, observerOptions);
+
+        workCards.forEach(card => {
+            cardObserver.observe(card);
+
+            // Add touch feedback
+            card.addEventListener('touchstart', () => {
+                card.classList.add('touching');
+            }, { passive: true });
+
+            card.addEventListener('touchend', () => {
+                card.classList.remove('touching');
+            }, { passive: true });
         });
-    });
+    } else {
+        // Desktop: Keep original hover behavior
+        workCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Deactivate all others
+                workCards.forEach(c => c.classList.remove('active'));
+                // Activate current
+                card.classList.add('active');
+            });
+        });
+    }
 }
 
 // ============================================

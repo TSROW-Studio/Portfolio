@@ -905,6 +905,25 @@ body.cursor-hover .cursor-label {
         flex: none;
         width: 100%;
     }
+
+    /* Mobile touch feedback states */
+    .work-card.in-view {
+        transform: scale(1.01);
+        box-shadow: 0 8px 32px rgba(255, 255, 255, 0.08);
+    }
+
+    .work-card.in-view img {
+        filter: grayscale(0%) brightness(0.9);
+    }
+
+    .work-card.touching {
+        transform: scale(0.98);
+        transition: transform 0.15s ease;
+    }
+
+    .work-card.touching img {
+        filter: grayscale(0%) brightness(1);
+    }
 }
 
 /* ================================================
@@ -1518,18 +1537,15 @@ body.menu-open .mobile-nav-link:nth-child(4) {
         right: 15px;
     }
 
+    /* Hide fixed UI footer on mobile to prevent overlap */
     .ui-footer {
-        bottom: 15px;
-        left: 15px;
-        right: 15px;
-        flex-direction: column;
-        gap: 5px;
-        align-items: flex-start;
+        display: none;
     }
 
-    /* Hero */
+    /* Hero - ensure no overlap with header */
     .section-hero {
-        padding-top: 25vh;
+        padding-top: max(100px, 20vh);
+        /* Ensure space for header */
         min-height: 100svh;
         /* Use small viewport height for mobile */
     }
@@ -1836,5 +1852,814 @@ body.menu-open .mobile-nav-link:nth-child(4) {
 
     .mobile-nav {
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+}
+
+/* ================================================
+   MOBILE RESPONSIVE ENHANCEMENTS
+   Added for full mobile responsiveness
+   ================================================ */
+
+/* ------------------------------------------------
+   GLOBAL OVERFLOW PREVENTION
+   Prevents horizontal scrolling on all devices
+   ------------------------------------------------ */
+html,
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Use dynamic viewport height for mobile browsers */
+@supports (height: 100dvh) {
+
+    .section-hero,
+    .mobile-nav {
+        min-height: 100dvh;
+    }
+}
+
+/* ------------------------------------------------
+   ENHANCED CONTAINER RULES
+   Mobile-first max-width and padding
+   ------------------------------------------------ */
+.container {
+    width: 100%;
+    max-width: min(1600px, 100vw - (var(--gutter) * 2));
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    box-sizing: border-box;
+}
+
+/* ------------------------------------------------
+   FLUID TYPOGRAPHY IMPROVEMENTS
+   Using clamp() for better scaling
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    :root {
+        /* Mobile-optimized gutter that respects safe areas */
+        --gutter: clamp(16px, 5vw, 24px);
+        --section-padding: clamp(48px, 12vh, 80px);
+    }
+
+    /* Ensure all text is readable on mobile */
+    body {
+        font-size: clamp(15px, 4vw, 16px);
+        line-height: 1.6;
+    }
+
+    /* Hero section fluid typography */
+    .hero-title {
+        font-size: clamp(2rem, 10vw, 4.5rem);
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        word-break: break-word;
+        hyphens: auto;
+    }
+
+    .hero-tagline p {
+        font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+        line-height: 1.6;
+    }
+
+    /* Section title fluid sizing */
+    .section-title {
+        font-size: clamp(1.25rem, 5vw, 2rem);
+        word-break: break-word;
+    }
+
+    /* About section improvements */
+    .about-statement h2 {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+        word-break: break-word;
+    }
+
+    .about-description p {
+        font-size: clamp(0.9rem, 3.5vw, 1rem);
+        margin-bottom: clamp(30px, 8vw, 50px);
+    }
+
+    /* Testimonial quote fluid sizing */
+    .testimonial-quote {
+        font-size: clamp(1.1rem, 4.5vw, 1.8rem);
+        line-height: 1.4;
+        padding: 0 clamp(8px, 2vw, 16px);
+    }
+
+    /* Contact title improvements */
+    .contact-title {
+        font-size: clamp(1.8rem, 8vw, 4rem);
+        word-break: break-word;
+        hyphens: auto;
+    }
+
+    /* Footer text sizing */
+    .footer-heading {
+        font-size: clamp(10px, 2.5vw, 11px);
+    }
+
+    .footer-links li {
+        font-size: clamp(0.875rem, 3.5vw, 1rem);
+    }
+}
+
+/* ------------------------------------------------
+   WORK SECTION MOBILE IMPROVEMENTS
+   Stack cards vertically with proper spacing
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-work {
+        padding: clamp(48px, 10vh, 80px) 0;
+    }
+
+    .work-gallery-wrapper {
+        height: auto;
+        min-height: auto;
+        padding: 0 var(--gutter);
+        overflow-x: hidden;
+    }
+
+    .work-gallery-track {
+        flex-direction: column;
+        gap: clamp(16px, 4vw, 24px);
+        height: auto;
+    }
+
+    .work-card {
+        flex: none;
+        width: 100%;
+        height: clamp(280px, 60vw, 400px);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* On mobile, show all cards with full info visible */
+    .work-card .work-card-info {
+        transform: translateY(0);
+        opacity: 1;
+        padding: clamp(16px, 4vw, 24px);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+    }
+
+    .work-card img {
+        filter: grayscale(30%) brightness(0.8);
+        transform: scale(1.05);
+    }
+
+    .work-card-info h3 {
+        font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+    }
+
+    .work-card-info span {
+        font-size: clamp(9px, 2.5vw, 11px);
+        letter-spacing: 1.5px;
+    }
+}
+
+/* ------------------------------------------------
+   PROCESS SECTION MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-process {
+        padding: clamp(48px, 10vh, 80px) 0;
+    }
+
+    .section-process .container {
+        grid-template-columns: 1fr;
+        gap: clamp(24px, 6vw, 40px);
+    }
+
+    .section-process .section-header {
+        position: static !important;
+        /* Force removal of sticky */
+        top: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-right: 0;
+        padding-bottom: clamp(16px, 4vw, 24px);
+        margin-bottom: clamp(24px, 6vw, 40px);
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .section-process .section-title {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+        white-space: nowrap;
+        /* Prevent awkward line breaks */
+        overflow: visible;
+    }
+
+    .process-step {
+        padding: clamp(20px, 5vw, 40px);
+        padding-left: clamp(60px, 15vw, 100px);
+    }
+
+    .step-number {
+        left: clamp(8px, 2vw, 16px);
+        top: clamp(24px, 6vw, 40px);
+        font-size: clamp(11px, 3vw, 14px);
+        width: auto;
+    }
+
+    .step-title {
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        margin-bottom: clamp(12px, 3vw, 20px);
+        line-height: 1.1;
+        word-break: break-word;
+    }
+
+    .step-description {
+        font-size: clamp(0.875rem, 3.5vw, 1rem);
+        line-height: 1.7;
+        margin-top: 0;
+    }
+
+    /* Disable hover transform on mobile for better touch experience */
+    .process-step:hover {
+        transform: none;
+    }
+
+    .process-step:active {
+        background: rgba(255, 255, 255, 0.02);
+    }
+}
+
+/* ------------------------------------------------
+   SERVICES SECTION MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-services {
+        padding: clamp(48px, 10vh, 80px) 0;
+    }
+
+    .services-layout {
+        gap: clamp(32px, 8vw, 60px);
+    }
+
+    .services-header {
+        margin-bottom: clamp(24px, 6vw, 40px);
+    }
+
+    .services-list {
+        gap: clamp(32px, 8vw, 48px);
+    }
+
+    .service-category {
+        padding-bottom: clamp(16px, 4vw, 24px);
+    }
+
+    .category-title {
+        font-size: clamp(11px, 3vw, 13px);
+        margin-bottom: clamp(16px, 4vw, 24px);
+        padding-bottom: clamp(10px, 2.5vw, 15px);
+    }
+
+    .category-items li {
+        font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+        padding: clamp(14px, 3.5vw, 18px) 0;
+        /* Larger touch targets */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    .services-cta {
+        margin-top: clamp(32px, 8vw, 60px);
+    }
+
+    .price-anchor {
+        font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+        text-align: center;
+    }
+}
+
+/* ------------------------------------------------
+   ABOUT SECTION MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-about {
+        padding: clamp(48px, 10vh, 80px) 0;
+    }
+
+    .about-grid {
+        gap: clamp(32px, 8vw, 48px);
+    }
+
+    .about-statement h2 {
+        line-height: 1.15;
+        margin-bottom: clamp(16px, 4vw, 24px);
+    }
+
+    .about-description p {
+        line-height: 1.7;
+    }
+
+    .about-label {
+        gap: clamp(10px, 2.5vw, 15px);
+    }
+
+    .label-line {
+        width: clamp(24px, 6vw, 40px);
+        margin-top: 6px;
+    }
+
+    .about-stats {
+        gap: clamp(20px, 5vw, 30px);
+        padding-top: clamp(20px, 5vw, 30px);
+    }
+
+    .stat {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: clamp(1.75rem, 8vw, 3rem);
+        margin-bottom: clamp(6px, 1.5vw, 10px);
+    }
+
+    .stat-label {
+        font-size: clamp(9px, 2.5vw, 11px);
+    }
+}
+
+/* ------------------------------------------------
+   MARQUEE MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-marquee {
+        padding: clamp(16px, 4vw, 24px) 0;
+    }
+
+    .marquee-text {
+        font-size: clamp(0.875rem, 3.5vw, 1.25rem);
+        padding-right: clamp(24px, 6vw, 40px);
+    }
+}
+
+/* ------------------------------------------------
+   CONTACT SECTION MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-contact {
+        padding: clamp(48px, 10vh, 80px) 0;
+        min-height: auto;
+    }
+
+    .contact-header {
+        margin-bottom: clamp(24px, 6vw, 40px);
+    }
+
+    .contact-cta {
+        width: 100%;
+    }
+
+    .contact-email {
+        width: 100%;
+        font-size: clamp(0.875rem, 3.5vw, 1.25rem);
+        padding: clamp(16px, 4vw, 24px) clamp(20px, 5vw, 32px);
+        text-align: center;
+        word-break: break-all;
+        /* Larger touch target */
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* ------------------------------------------------
+   FOOTER MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-footer {
+        padding: clamp(48px, 10vh, 80px) 0 clamp(80px, 15vh, 120px);
+        /* Extra bottom padding for footer UI */
+    }
+
+    .footer-grid {
+        gap: clamp(32px, 8vw, 48px);
+        margin-bottom: clamp(48px, 10vh, 80px);
+    }
+
+    .footer-col {
+        text-align: left;
+    }
+
+    .footer-heading {
+        margin-bottom: clamp(16px, 4vw, 24px);
+    }
+
+    .footer-links li {
+        margin-bottom: clamp(10px, 2.5vw, 14px);
+        /* Touch-friendly spacing */
+    }
+
+    .footer-links a {
+        /* Larger touch target */
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 0;
+    }
+
+    .footer-newsletter p {
+        font-size: clamp(0.8rem, 3vw, 0.9rem);
+        margin-bottom: clamp(14px, 3.5vw, 20px);
+    }
+
+    .newsletter-form {
+        gap: clamp(8px, 2vw, 12px);
+    }
+
+    .newsletter-input {
+        padding: clamp(14px, 3.5vw, 18px) clamp(14px, 3.5vw, 18px);
+        font-size: clamp(0.875rem, 3.5vw, 1rem);
+        /* Prevent iOS zoom on focus */
+        font-size: 16px;
+    }
+
+    .newsletter-btn {
+        width: 100%;
+        height: clamp(48px, 12vw, 56px);
+        min-height: 48px;
+        font-size: clamp(1rem, 4vw, 1.25rem);
+    }
+
+    .footer-bottom {
+        gap: clamp(16px, 4vw, 24px);
+    }
+
+    .footer-logo {
+        font-size: clamp(1.25rem, 5vw, 1.75rem);
+    }
+
+    .footer-legal {
+        gap: clamp(12px, 3vw, 20px);
+        font-size: clamp(9px, 2.5vw, 11px);
+    }
+
+    .footer-legal span {
+        text-align: center;
+        width: 100%;
+    }
+
+    .footer-legal a {
+        /* Touch-friendly */
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 8px;
+    }
+}
+
+/* ------------------------------------------------
+   HEADER & NAVIGATION MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .ui-frame {
+        padding: clamp(12px, 3vw, 16px);
+    }
+
+    .ui-header {
+        top: clamp(12px, 3vw, 16px);
+        left: clamp(12px, 3vw, 16px);
+        right: clamp(12px, 3vw, 16px);
+    }
+
+    .logo {
+        font-size: clamp(12px, 3.5vw, 16px);
+        /* Touch-friendly */
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-toggle {
+        width: clamp(44px, 11vw, 56px);
+        height: clamp(44px, 11vw, 56px);
+        /* Guaranteed touch target */
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .menu-toggle span {
+        width: clamp(20px, 5vw, 28px);
+    }
+
+    /* Mobile Nav Overlay improvements */
+    .mobile-nav {
+        padding-top: clamp(80px, 20vw, 120px);
+    }
+
+    .mobile-nav-links {
+        gap: clamp(20px, 5vw, 32px);
+        width: 100%;
+        padding: 0 var(--gutter);
+    }
+
+    .mobile-nav-link {
+        font-size: clamp(1.75rem, 7vw, 3rem);
+        width: 100%;
+        text-align: center;
+        /* Touch-friendly */
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(8px, 2vw, 12px) 0;
+    }
+
+    /* UI Footer on mobile */
+    .ui-footer {
+        bottom: clamp(12px, 3vw, 16px);
+        left: clamp(12px, 3vw, 16px);
+        right: clamp(12px, 3vw, 16px);
+        font-size: clamp(8px, 2.5vw, 10px);
+        flex-wrap: wrap;
+    }
+
+    .time-display,
+    .velocity-display {
+        font-size: clamp(8px, 2.5vw, 10px);
+    }
+}
+
+/* ------------------------------------------------
+   PRELOADER MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .preloader-inner {
+        gap: clamp(24px, 6vw, 40px);
+        padding: 0 var(--gutter);
+    }
+
+    .preloader-logo {
+        font-size: clamp(2.5rem, 12vw, 5rem);
+    }
+
+    .preloader-bar {
+        width: clamp(120px, 40vw, 200px);
+    }
+
+    .preloader-count {
+        font-size: clamp(11px, 3vw, 14px);
+    }
+}
+
+/* ------------------------------------------------
+   BUTTON MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .btn-primary {
+        width: 100%;
+        justify-content: center;
+        padding: clamp(16px, 4vw, 22px) clamp(24px, 6vw, 36px);
+        font-size: clamp(10px, 3vw, 12px);
+        /* Touch target */
+        min-height: 52px;
+    }
+
+    .btn-arrow {
+        font-size: clamp(1rem, 4vw, 1.25rem);
+    }
+}
+
+/* ------------------------------------------------
+   HERO SECTION MOBILE IMPROVEMENTS
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+    .section-hero {
+        padding-top: clamp(100px, 25vh, 150px);
+        padding-bottom: clamp(60px, 15vh, 100px);
+        min-height: 100svh;
+    }
+
+    .hero-content {
+        padding: 0 var(--gutter);
+    }
+
+    .hero-title .line {
+        /* Allow text to wrap properly on very small screens */
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .hero-tagline {
+        max-width: 100%;
+        margin-bottom: clamp(32px, 8vw, 56px);
+    }
+
+    .hero-cta {
+        width: 100%;
+    }
+}
+
+/* ------------------------------------------------
+   VERY SMALL SCREENS (360px and below)
+   ------------------------------------------------ */
+@media (max-width: 360px) {
+    :root {
+        --gutter: 12px;
+    }
+
+    .hero-title {
+        font-size: clamp(1.75rem, 11vw, 2.5rem);
+    }
+
+    .about-statement h2 {
+        font-size: clamp(1.25rem, 7vw, 2rem);
+    }
+
+    .contact-title {
+        font-size: clamp(1.5rem, 9vw, 2.5rem);
+    }
+
+    .testimonial-quote {
+        font-size: clamp(0.95rem, 4vw, 1.5rem);
+    }
+
+    .work-card {
+        height: clamp(220px, 55vw, 300px);
+    }
+
+    .mobile-nav-link {
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+    }
+
+    .contact-email {
+        font-size: clamp(0.75rem, 3.5vw, 1rem);
+        padding: clamp(14px, 3.5vw, 18px);
+    }
+}
+
+/* ------------------------------------------------
+   ENHANCED iOS SAFE AREA SUPPORT
+   ------------------------------------------------ */
+@supports (padding: max(0px)) {
+    @media (max-width: 768px) {
+        .ui-header {
+            padding-top: max(var(--gutter), env(safe-area-inset-top));
+            padding-left: max(var(--gutter), env(safe-area-inset-left));
+            padding-right: max(var(--gutter), env(safe-area-inset-right));
+        }
+
+        .section-footer {
+            padding-bottom: max(clamp(80px, 15vh, 120px), calc(env(safe-area-inset-bottom) + 60px));
+        }
+
+        .ui-footer {
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+        }
+
+        .mobile-nav {
+            padding-top: max(100px, calc(env(safe-area-inset-top) + 80px));
+            padding-bottom: max(40px, env(safe-area-inset-bottom));
+            padding-left: max(var(--gutter), env(safe-area-inset-left));
+            padding-right: max(var(--gutter), env(safe-area-inset-right));
+        }
+
+        .section-hero {
+            padding-top: max(clamp(100px, 25vh, 150px), calc(env(safe-area-inset-top) + 80px));
+        }
+
+        .container {
+            padding-left: max(var(--gutter), env(safe-area-inset-left));
+            padding-right: max(var(--gutter), env(safe-area-inset-right));
+        }
+    }
+}
+
+/* ------------------------------------------------
+   TABLET SPECIFIC IMPROVEMENTS (768px - 1024px)
+   ------------------------------------------------ */
+@media (min-width: 769px) and (max-width: 1024px) {
+    :root {
+        --gutter: clamp(24px, 4vw, 40px);
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 9vw, 6rem);
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: clamp(32px, 6vw, 56px);
+    }
+
+    .about-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .work-gallery-wrapper {
+        height: clamp(50vh, 60vh, 70vh);
+    }
+
+    .work-card {
+        min-width: 80px;
+    }
+
+    .services-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(24px, 4vw, 40px);
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contact-email {
+        font-size: clamp(1.25rem, 3vw, 2rem);
+    }
+}
+
+/* ------------------------------------------------
+   ORIENTATION SPECIFIC STYLES
+   ------------------------------------------------ */
+@media (max-width: 768px) and (orientation: portrait) {
+    .section-hero {
+        min-height: 100svh;
+    }
+
+    .work-card {
+        height: clamp(250px, 45vw, 350px);
+    }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .section-hero {
+        min-height: auto;
+        padding: clamp(60px, 15vh, 100px) 0;
+    }
+
+    .hero-title {
+        font-size: clamp(1.5rem, 6vw, 3rem);
+    }
+
+    .mobile-nav-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: clamp(16px, 4vw, 24px);
+    }
+
+    .mobile-nav-link {
+        font-size: clamp(1.25rem, 4vw, 2rem);
+        width: auto;
+        padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 24px);
+    }
+
+    .work-card {
+        height: clamp(200px, 40vh, 280px);
+    }
+}
+
+/* ------------------------------------------------
+   MOBILE ANIMATION PERFORMANCE OPTIMIZATIONS
+   Preserves animations but optimizes for mobile GPU
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+
+    /* Use GPU-accelerated properties */
+    .work-card,
+    .work-card img,
+    .work-card-info,
+    .process-step,
+    .mobile-nav-link,
+    .btn-primary,
+    .contact-email,
+    .marquee-track {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
+
+    /* Slightly reduce animation complexity on mobile for better performance */
+    .bg-overlay::after {
+        animation-duration: 30s;
+        /* Slower for less CPU usage */
+    }
+
+    /* Reduce grain animation frequency on mobile */
+    .bg-overlay {
+        animation: noiseShift 1s steps(5) infinite;
+    }
+}
+
+/* ------------------------------------------------
+   FOCUS STATES FOR ACCESSIBILITY
+   ------------------------------------------------ */
+@media (max-width: 768px) {
+
+    .nav-link:focus-visible,
+    .mobile-nav-link:focus-visible,
+    .btn-primary:focus-visible,
+    .contact-email:focus-visible,
+    .footer-links a:focus-visible,
+    .newsletter-input:focus-visible,
+    .newsletter-btn:focus-visible,
+    .logo:focus-visible,
+    .menu-toggle:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 4px;
     }
 }
