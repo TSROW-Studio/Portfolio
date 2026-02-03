@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSROW — Digital Reality Engineers</title>
+    <meta name="description"
+        content="TSROW is an elite design & engineering studio. We build digital cathedrals for luxury brands.">
+
+    <!-- Fonts: Premium Swiss Stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- ======================= -->
+    <!-- PRELOADER               -->
+    <!-- ======================= -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-logo">
+                <span class="char">T</span><span class="char">S</span><span class="char">R</span><span
+                    class="char">O</span><span class="char">W</span>
+            </div>
+            <div class="preloader-bar">
+                <div class="preloader-progress" id="preloader-progress"></div>
+            </div>
+            <div class="preloader-count" id="preloader-count">000</div>
+        </div>
+    </div>
+
+    <!-- ======================= -->
+    <!-- CUSTOM CURSOR           -->
+    <!-- ======================= -->
+    <div class="cursor" id="cursor">
+        <div class="cursor-ball"></div>
+        <div class="cursor-label">VIEW</div>
+    </div>
+
+    <!-- ======================= -->
+    <!-- WEBGL BACKGROUND        -->
+    <!-- ======================= -->
+    <canvas id="gl-canvas"></canvas>
+
+    <!-- ======================= -->
+    <!-- FIXED UI FRAME          -->
+    <!-- ======================= -->
+    <div class="ui-frame">
+        <header class="ui-header">
+            <a href="#" class="logo magnetic" data-strength="30">TSROW<sup>®</sup></a>
+            <nav class="main-nav">
+                <a href="#work" class="nav-link magnetic" data-strength="20"><span>WORK</span></a>
+                <a href="#about" class="nav-link magnetic" data-strength="20"><span>STUDIO</span></a>
+                <a href="#contact" class="nav-link magnetic" data-strength="20"><span>CONTACT</span></a>
+            </nav>
+        </header>
+        <div class="ui-sidebar-left">
+            <div class="scene-indicator">
+                <span class="scene-current" id="scene-current">01</span>
+                <div class="scene-divider"></div>
+                <span class="scene-total">07</span>
+            </div>
+        </div>
+        <div class="ui-sidebar-right">
+            <div class="scroll-indicator">
+                <span>SCROLL</span>
+                <div class="scroll-line">
+                    <div class="scroll-dot"></div>
+                </div>
+            </div>
+        </div>
+        <footer class="ui-footer">
+            <span class="time-display" id="time-display">--:--:--</span>
+            <span class="velocity-display">VEL: <span id="velocity">0.00</span></span>
+        </footer>
+    </div>
+
+    <!-- ======================= -->
+    <!-- MAIN SCROLL CONTAINER   -->
+    <!-- ======================= -->
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- HERO -->
+            <section class="section section-hero" data-scene="01">
+                <div class="hero-content">
+                    <h1 class="hero-title" data-animate="chars">
+                        <span class="line">DIGITAL</span>
+                        <span class="line">REALITY</span>
+                        <span class="line">ENGINEERS</span>
+                    </h1>
+                    <div class="hero-tagline">
+                        <p data-animate="words">We build digital cathedrals for brands who worship at the altar of
+                            detail.</p>
+                    </div>
+                    <div class="hero-cta">
+                        <a href="#work" class="btn-primary magnetic" data-strength="40">
+                            <span class="btn-text">VIEW WORK</span>
+                            <span class="btn-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-scroll-hint">
+                    <span>SCROLL TO EXPLORE</span>
+                    <div class="scroll-arrow"></div>
+                </div>
+            </section>
+
+            <!-- MARQUEE -->
+            <section class="section section-marquee">
+                <div class="marquee" data-speed="1">
+                    <div class="marquee-track">
+                        <span class="marquee-text">STRATEGY • DESIGN • DEVELOPMENT • BRANDING • MOTION • WEBGL •</span>
+                        <span class="marquee-text">STRATEGY • DESIGN • DEVELOPMENT • BRANDING • MOTION • WEBGL •</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT -->
+            <section class="section section-about" id="about" data-scene="02">
+                <div class="container">
+                    <div class="about-grid">
+                        <div class="about-label">
+                            <span class="label-line"></span>
+                            <span class="label-text">PHILOSOPHY</span>
+                        </div>
+                        <div class="about-statement">
+                            <h2 data-animate="lines">
+                                <span class="line">WE DON'T BUILD</span>
+                                <span class="line">WEBSITES.</span>
+                                <span class="line accent">WE ENGINEER</span>
+                                <span class="line accent">EXPERIENCES.</span>
+                            </h2>
+                        </div>
+                        <div class="about-description">
+                            <p data-animate="fade">Every pixel is intentional. Every interaction is choreographed. We
+                                reject templates, default solutions, and mediocrity. Our work is for those who
+                                understand that digital presence is not a checkbox—it's a competitive weapon.</p>
+                            <div class="about-stats">
+                                <div class="stat">
+                                    <span class="stat-number" data-count="47">0</span>
+                                    <span class="stat-label">PROJECTS DELIVERED</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number" data-count="12">0</span>
+                                    <span class="stat-label">AWARDS WON</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">$2.4B+</span>
+                                    <span class="stat-label">CLIENT VALUATIONS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WORK -->
+            <section class="section section-work" id="work" data-scene="03">
+                <div class="container">
+                    <div class="section-header">
+                        <span class="section-index">03</span>
+                        <h2 class="section-title" data-animate="chars">SELECTED WORK</h2>
+                        <span class="section-year">(2023—2025)</span>
+                    </div>
+                </div>
+                <div class="work-list">
+                    <article class="work-item" data-cursor="VIEW"
+                        data-img="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800">
+                        <div class="work-item-inner">
+                            <span class="work-index">01</span>
+                            <h3 class="work-title">AEROSPACE MONOLITH</h3>
+                            <div class="work-meta">
+                                <span class="work-category">WEBGL / E-COMMERCE</span>
+                                <span class="work-year">2024</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="work-item" data-cursor="VIEW"
+                        data-img="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800">
+                        <div class="work-item-inner">
+                            <span class="work-index">02</span>
+                            <h3 class="work-title">ONYX ARCHIVES</h3>
+                            <div class="work-meta">
+                                <span class="work-category">ARCHIVAL SYSTEM</span>
+                                <span class="work-year">2024</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="work-item" data-cursor="VIEW"
+                        data-img="https://images.unsplash.com/photo-1517976487492-5750f3195933?w=800">
+                        <div class="work-item-inner">
+                            <span class="work-index">03</span>
+                            <h3 class="work-title">CARBON FINANCE</h3>
+                            <div class="work-meta">
+                                <span class="work-category">FINTECH / IDENTITY</span>
+                                <span class="work-year">2023</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="work-item" data-cursor="VIEW"
+                        data-img="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800">
+                        <div class="work-item-inner">
+                            <span class="work-index">04</span>
+                            <h3 class="work-title">VANGUARD MUSEUM</h3>
+                            <div class="work-meta">
+                                <span class="work-category">EXPERIENTIAL</span>
+                                <span class="work-year">2023</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="work-item" data-cursor="VIEW"
+                        data-img="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800">
+                        <div class="work-item-inner">
+                            <span class="work-index">05</span>
+                            <h3 class="work-title">NOIR HOSPITALITY</h3>
+                            <div class="work-meta">
+                                <span class="work-category">LUXURY / BOOKING</span>
+                                <span class="work-year">2023</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!-- Floating Preview -->
+                <div class="work-preview" id="work-preview">
+                    <div class="work-preview-img"></div>
+                </div>
+            </section>
+
+            <!-- PROCESS -->
+            <section class="section section-process" data-scene="04">
+                <div class="container">
+                    <div class="section-header">
+                        <span class="section-index">04</span>
+                        <h2 class="section-title" data-animate="chars">METHODOLOGY</h2>
+                    </div>
+                    <div class="process-grid">
+                        <div class="process-step" data-step="01">
+                            <div class="step-header">
+                                <span class="step-number">01</span>
+                                <h3 class="step-title">DISCOVERY</h3>
+                            </div>
+                            <p class="step-description">We dissect your brand DNA. Competitors are analyzed.
+                                Opportunities are mapped. Nothing moves forward without strategic clarity.</p>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="process-step" data-step="02">
+                            <div class="step-header">
+                                <span class="step-number">02</span>
+                                <h3 class="step-title">STRATEGY</h3>
+                            </div>
+                            <p class="step-description">Architecture before aesthetics. We define the experience logic,
+                                user flows, and technical requirements before any design begins.</p>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="process-step" data-step="03">
+                            <div class="step-header">
+                                <span class="step-number">03</span>
+                                <h3 class="step-title">DESIGN</h3>
+                            </div>
+                            <p class="step-description">High-fidelity prototypes with surgical precision. Every grid
+                                alignment, every type scale, every interaction state is considered.</p>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="process-step" data-step="04">
+                            <div class="step-header">
+                                <span class="step-number">04</span>
+                                <h3 class="step-title">ENGINEERING</h3>
+                            </div>
+                            <p class="step-description">Performance-obsessed development. We write code that's as
+                                beautiful as the design it brings to life. No bloat. No compromise.</p>
+                            <div class="step-line"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SERVICES -->
+            <section class="section section-services" data-scene="05">
+                <div class="container">
+                    <div class="services-layout">
+                        <div class="services-header">
+                            <span class="section-index">05</span>
+                            <h2 class="section-title" data-animate="chars">CAPABILITIES</h2>
+                        </div>
+                        <div class="services-list">
+                            <div class="service-category">
+                                <h3 class="category-title">CREATIVE</h3>
+                                <ul class="category-items">
+                                    <li>Brand Strategy & Identity</li>
+                                    <li>Art Direction</li>
+                                    <li>Motion Design</li>
+                                    <li>3D & CGI</li>
+                                </ul>
+                            </div>
+                            <div class="service-category">
+                                <h3 class="category-title">ENGINEERING</h3>
+                                <ul class="category-items">
+                                    <li>WebGL & Three.js</li>
+                                    <li>Creative Development</li>
+                                    <li>Headless CMS</li>
+                                    <li>Performance Optimization</li>
+                                </ul>
+                            </div>
+                            <div class="service-category">
+                                <h3 class="category-title">STRATEGIC</h3>
+                                <ul class="category-items">
+                                    <li>Digital Transformation</li>
+                                    <li>UX Research & Audit</li>
+                                    <li>Conversion Optimization</li>
+                                    <li>Technical Consulting</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="services-cta">
+                            <div class="price-anchor">PROJECTS START AT <span class="accent">$50,000</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TESTIMONIAL -->
+            <section class="section section-testimonial" data-scene="06">
+                <div class="container">
+                    <div class="testimonial-content">
+                        <blockquote class="testimonial-quote" data-animate="words">
+                            "TSROW doesn't just build websites. They build competitive advantages. The level of craft
+                            and strategic thinking is unmatched."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <span class="author-name">JONATHAN MILLS</span>
+                            <span class="author-role">CEO, AEROSPACE MONOLITH</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTACT -->
+            <section class="section section-contact" id="contact" data-scene="07">
+                <div class="container">
+                    <div class="contact-content">
+                        <div class="contact-header">
+                            <span class="section-index">07</span>
+                            <h2 class="contact-title" data-animate="chars">LET'S BUILD<br>SOMETHING<br>LEGENDARY.</h2>
+                        </div>
+                        <div class="contact-cta">
+                            <a href="mailto:hello@tsrow.studio" class="contact-email magnetic" data-strength="50">
+                                <span class="email-text" data-scramble>HELLO@TSROW.STUDIO</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="section section-footer">
+                <div class="container">
+                    <div class="footer-grid">
+                        <div class="footer-col">
+                            <h4 class="footer-heading">NAVIGATION</h4>
+                            <ul class="footer-links">
+                                <li><a href="#" class="magnetic" data-strength="15"><span>Index</span></a></li>
+                                <li><a href="#work" class="magnetic" data-strength="15"><span>Work</span></a></li>
+                                <li><a href="#about" class="magnetic" data-strength="15"><span>Studio</span></a></li>
+                                <li><a href="#contact" class="magnetic" data-strength="15"><span>Contact</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4 class="footer-heading">CONNECT</h4>
+                            <ul class="footer-links">
+                                <li><a href="#" class="magnetic" data-strength="15"><span>Instagram</span></a></li>
+                                <li><a href="#" class="magnetic" data-strength="15"><span>Twitter</span></a></li>
+                                <li><a href="#" class="magnetic" data-strength="15"><span>LinkedIn</span></a></li>
+                                <li><a href="#" class="magnetic" data-strength="15"><span>Dribbble</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4 class="footer-heading">LOCATIONS</h4>
+                            <ul class="footer-links">
+                                <li>LOS ANGELES, CA</li>
+                                <li>TOKYO, JP</li>
+                                <li>LONDON, UK</li>
+                            </ul>
+                        </div>
+                        <div class="footer-col footer-col-wide">
+                            <div class="footer-newsletter">
+                                <h4 class="footer-heading">STAY INFORMED</h4>
+                                <p>Get updates on our latest work and studio news.</p>
+                                <form class="newsletter-form">
+                                    <input type="email" placeholder="YOUR EMAIL" class="newsletter-input">
+                                    <button type="submit" class="newsletter-btn magnetic" data-strength="20">→</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <div class="footer-logo">TSROW<sup>®</sup></div>
+                        <div class="footer-legal">
+                            <span>© 2026 TSROW INC. ALL RIGHTS RESERVED.</span>
+                            <a href="#">PRIVACY</a>
+                            <a href="#">TERMS</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-marquee">
+                    <span class="footer-big-text">DIGITAL REALITY ENGINEERS — </span>
+                    <span class="footer-big-text">DIGITAL REALITY ENGINEERS — </span>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type@0.3.4/umd/index.min.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
