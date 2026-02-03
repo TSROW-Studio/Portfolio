@@ -493,4 +493,62 @@ processSteps.forEach((step, index) => {
     });
 });
 
+// ============================================
+// MOBILE MENU
+// ============================================
+const menuToggle = document.getElementById('menu-toggle');
+const mobileNav = document.getElementById('mobile-nav');
+const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+        document.body.classList.toggle('menu-open');
+
+        // Stop/resume scroll when menu is open
+        if (document.body.classList.contains('menu-open')) {
+            lenis.stop();
+        } else {
+            lenis.start();
+        }
+    });
+
+    // Close menu when clicking a link
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            document.body.classList.remove('menu-open');
+            lenis.start();
+        });
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('menu-open')) {
+            document.body.classList.remove('menu-open');
+            lenis.start();
+        }
+    });
+}
+
+// ============================================
+// TOUCH DEVICE DETECTION
+// ============================================
+function isTouchDevice() {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+}
+
+if (isTouchDevice()) {
+    document.body.classList.add('touch-device');
+}
+
+// ============================================
+// VIEWPORT HEIGHT FIX (Mobile Safari)
+// ============================================
+function setVH() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+setVH();
+window.addEventListener('resize', setVH);
+
 console.log('🚀 TSROW Studio — Loaded');
