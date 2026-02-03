@@ -642,6 +642,24 @@ processSteps.forEach((step, index) => {
 });
 
 // ============================================
+// METHODOLOGY HEADER PINNING
+// ============================================
+const processSection = document.querySelector('.section-process');
+const processHeader = document.querySelector('.section-process .section-header');
+const processGrid = document.querySelector('.process-grid');
+
+if (processSection && processHeader && processGrid) {
+    // Pin the methodology header while scrolling through process steps
+    ScrollTrigger.create({
+        trigger: processGrid,
+        start: 'top 15%',
+        end: 'bottom center',
+        pin: processHeader,
+        pinSpacing: false
+    });
+}
+
+// ============================================
 // MOBILE MENU
 // ============================================
 const menuToggle = document.getElementById('menu-toggle');

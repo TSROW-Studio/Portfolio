@@ -943,15 +943,15 @@ body.cursor-hover .cursor-label {
 }
 
 .section-process .section-header {
-    position: sticky;
-    top: 15vh;
-    /* Stick to top */
+    position: relative;
+    /* GSAP ScrollTrigger handles pinning */
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 0;
     padding-right: 40px;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    height: auto;
+    height: fit-content;
+    align-self: start;
 }
 
 .section-process .section-title {
