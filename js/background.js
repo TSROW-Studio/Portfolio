@@ -1,164 +1,186 @@
 /**
- * TSROW Studio — WebGL Background Engine
- * Premium noise shader with mouse interaction
+ * TSROW Studio — Void Geometry Engine
+ * A premium 3D background using Three.js with floating wireframe primitives.
  */
 
+// Configuration
+// Configuration
+const CONFIG = {
+    objectCount: 25, // Reduced for cleaner look
+    fogDensity: 0.05,
+    mouseSensitivity: 0.02, // 2.5x slower parallax
+    scrollSensitivity: 0.005, // 10x less reactive to scroll
+    baseSpeed: 0.0005 // Slower base rotation
+};
+
+// State
+const state = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    mouseX: 0,
+    mouseY: 0,
+    targetMouseX: 0,
+    targetMouseY: 0,
+    scrollVel: 0,
+    targetScrollVel: 0,
+    mood: 0.0, // 0 = Home/Calm, 1 = Work/Intense
+    targetMood: 0.0
+};
+
+// Scene Setup
 const canvas = document.getElementById('gl-canvas');
-const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a0a0a, CONFIG.fogDensity);
 
-let mouseX = 0.5;
-let mouseY = 0.5;
-let time = 0;
+const camera = new THREE.PerspectiveCamera(75, state.width / state.height, 0.1, 100);
+camera.position.z = 5;
 
-// Vertex Shader
-const vertexShaderSource = `
-    attribute vec2 a_position;
-    void main() {
-        gl_Position = vec4(a_position, 0.0, 1.0);
-    }
-`;
+const renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true // Critical for clean wireframes
+});
+renderer.setSize(state.width, state.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// Fragment Shader - Noise Field
-const fragmentShaderSource = `
-    precision mediump float;
-    uniform vec2 u_resolution;
-    uniform vec2 u_mouse;
-    uniform float u_time;
-    
-    // Simplex noise functions
-    vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-    vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-    vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-    
-    float snoise(vec2 v) {
-        const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-        vec2 i  = floor(v + dot(v, C.yy));
-        vec2 x0 = v -   i + dot(i, C.xx);
-        vec2 i1;
-        i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-        vec4 x12 = x0.xyxy + C.xxzz;
-        x12.xy -= i1;
-        i = mod289(i);
-        vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-        m = m*m;
-        m = m*m;
-        vec3 x = 2.0 * fract(p * C.www) - 1.0;
-        vec3 h = abs(x) - 0.5;
-        vec3 ox = floor(x + 0.5);
-        vec3 a0 = x - ox;
-        m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
-        vec3 g;
-        g.x  = a0.x  * x0.x  + h.x  * x0.y;
-        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-        return 130.0 * dot(m, g);
-    }
-    
-    void main() {
-        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-        vec2 mouse = u_mouse;
-        
-        // Create flowing noise
-        float noise1 = snoise(uv * 3.0 + u_time * 0.1);
-        float noise2 = snoise(uv * 5.0 - u_time * 0.15);
-        float noise3 = snoise(uv * 8.0 + u_time * 0.05);
-        
-        // Combine noise layers
-        float noise = noise1 * 0.5 + noise2 * 0.3 + noise3 * 0.2;
-        
-        // Mouse interaction - create distortion near cursor
-        float dist = distance(uv, mouse);
-        float mouseInfluence = smoothstep(0.4, 0.0, dist);
-        noise += mouseInfluence * snoise(uv * 10.0 + u_time * 0.3) * 0.5;
-        
-        // Color output - subtle dark noise
-        float brightness = 0.02 + noise * 0.03;
-        brightness = clamp(brightness, 0.0, 0.1);
-        
-        // Add subtle grid lines
-        vec2 grid = fract(uv * 50.0);
-        float gridLine = step(0.98, grid.x) + step(0.98, grid.y);
-        brightness += gridLine * 0.02;
-        
-        gl_FragColor = vec4(vec3(brightness), 1.0);
-    }
-`;
+// Geometry Pool
+const geometries = [
+    new THREE.IcosahedronGeometry(1, 0),
+    new THREE.OctahedronGeometry(1, 0),
+    new THREE.TetrahedronGeometry(1, 0),
+    new THREE.BoxGeometry(1, 1, 1)
+];
 
-function createShader(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-    }
-    return shader;
+const material = new THREE.LineBasicMaterial({
+    color: 0x444444, // Dark Grey
+    transparent: true,
+    opacity: 0.3,
+    linewidth: 1 // Note: Windows WebGL implementation often limits this to 1
+});
+
+// Create Objects
+const objects = [];
+const group = new THREE.Group();
+scene.add(group);
+
+for (let i = 0; i < CONFIG.objectCount; i++) {
+    const geo = geometries[Math.floor(Math.random() * geometries.length)];
+    const wireframe = new THREE.WireframeGeometry(geo);
+    const line = new THREE.LineSegments(wireframe, material);
+
+    // Random Position in "Voice"
+    line.position.x = (Math.random() - 0.5) * 20;
+    line.position.y = (Math.random() - 0.5) * 20;
+    line.position.z = (Math.random() - 0.5) * 10 - 5; // Depth spread
+
+    // Random Scale
+    const scale = Math.random() * 0.5 + 0.2;
+    line.scale.set(scale, scale, scale);
+
+    // Random Rotation Speed
+    line.userData = {
+        rotX: (Math.random() - 0.5) * 0.01,
+        rotY: (Math.random() - 0.5) * 0.01,
+        baseY: line.position.y,
+        randomPhase: Math.random() * Math.PI * 2
+    };
+
+    group.add(line);
+    objects.push(line);
 }
 
-function createProgram(gl, vertexShader, fragmentShader) {
-    const program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error('Program link error:', gl.getProgramInfoLog(program));
-        return null;
-    }
-    return program;
-}
+// Handling Resize
+window.addEventListener('resize', () => {
+    state.width = window.innerWidth;
+    state.height = window.innerHeight;
 
-if (gl) {
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-    const program = createProgram(gl, vertexShader, fragmentShader);
+    camera.aspect = state.width / state.height;
+    camera.updateProjectionMatrix();
 
-    if (program) {
-        const positionLocation = gl.getAttribLocation(program, 'a_position');
-        const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-        const mouseLocation = gl.getUniformLocation(program, 'u_mouse');
-        const timeLocation = gl.getUniformLocation(program, 'u_time');
+    renderer.setSize(state.width, state.height);
+});
 
-        const positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            -1, -1, 1, -1, -1, 1,
-            -1, 1, 1, -1, 1, 1
-        ]), gl.STATIC_DRAW);
+// Handling Mouse
+window.addEventListener('mousemove', (e) => {
+    state.targetMouseX = (e.clientX - state.width / 2) * 0.001;
+    state.targetMouseY = (e.clientY - state.height / 2) * 0.001;
+});
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            gl.viewport(0, 0, canvas.width, canvas.height);
-        }
+// Reduced Motion Support
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        window.addEventListener('resize', resize);
-        resize();
+// Animation Loop
+function animate() {
+    requestAnimationFrame(animate);
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX / window.innerWidth;
-            mouseY = 1.0 - (e.clientY / window.innerHeight);
+    // Physics Interpolation
+    if (!prefersReducedMotion) {
+        // Heavy Dampening (Cinema Smooth)
+        state.mouseX += (state.targetMouseX - state.mouseX) * 0.02; // Very slow follow
+        state.mouseY += (state.targetMouseY - state.mouseY) * 0.02;
+
+        // Clamp & Dampen Scroll
+        // We limit the "target" influence to avoid spikes
+        const clampedTarget = Math.min(Math.max(state.targetScrollVel, -5), 5); // Tighter clamp
+        state.scrollVel += (clampedTarget - state.scrollVel) * 0.02; // Very heavy inertia
+
+        state.mood += (state.targetMood - state.mood) * 0.01; // Ultra slow mood shift
+
+        // Camera Parallax (Mouse) - Reduced Amplitude
+        camera.position.x += (state.mouseX * 2 - camera.position.x) * 0.02;
+        camera.position.y += (-state.mouseY * 2 - camera.position.y) * 0.02;
+        camera.lookAt(scene.position);
+
+        // Group Rotation (CONSTANT SMOOTH ROTATION)
+        // Decoupled from scroll delta to prevent jitter
+        group.rotation.y += CONFIG.baseSpeed;
+        group.rotation.x += CONFIG.baseSpeed * 0.5;
+
+        // Individual Object Animation
+        objects.forEach((obj, i) => {
+            // Self Rotation - Constant smooth speed
+            obj.rotation.x += obj.userData.rotX;
+            obj.rotation.y += obj.userData.rotY;
+
+            // Float / Breathe
+            const time = Date.now() * 0.0002; // Extremely slow breathe
+
+            // Positions float gently
+            obj.position.y = obj.userData.baseY + Math.sin(time + obj.userData.randomPhase) * 0.2;
+
+            // Scroll "Warp" effect - Z-axis ONLY
+            // This is the only place scroll affects physics now (linear movement, no rotation)
+            obj.position.z += state.scrollVel * 0.005;
+
+            // Loop objects back
+            if (obj.position.z > 5) {
+                obj.position.z -= 15;
+            } else if (obj.position.z < -10) {
+                obj.position.z += 15;
+            }
         });
 
-        function render() {
-            time += 0.016;
-
-            gl.useProgram(program);
-            gl.enableVertexAttribArray(positionLocation);
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-            gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
-            gl.uniform2f(mouseLocation, mouseX, mouseY);
-            gl.uniform1f(timeLocation, time);
-
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
-            requestAnimationFrame(render);
-        }
-
-        render();
+    } else {
+        // Reduced Motion
+        camera.position.x = 0;
+        camera.position.y = 0;
+        camera.lookAt(scene.position);
+        group.rotation.y += 0.0001;
     }
-} else {
-    // Fallback for no WebGL - simple CSS animation
-    canvas.style.background = 'linear-gradient(135deg, #0a0a0a 0%, #151515 100%)';
+
+    renderer.render(scene, camera);
 }
+
+animate();
+
+// Public API
+window.BG_ENGINE = {
+    setScrollVelocity: (v) => {
+        state.targetScrollVel = v;
+    },
+    setMood: (moodName) => {
+        if (moodName === 'work') state.targetMood = 1.0;     // Hectic, Fast
+        else if (moodName === 'home') state.targetMood = 0.0; // Calm, Float
+        else if (moodName === 'contact') state.targetMood = -0.5; // Frozen, Still
+    }
+};

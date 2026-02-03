@@ -179,9 +179,38 @@ magnetics.forEach(magnetic => {
 });
 
 // ============================================
+// PARALLAX SYSTEM
+// ============================================
+function initParallax() {
+    // Select elements with data-speed attribute
+    const parallaxParams = document.querySelectorAll('[data-speed]');
+
+    parallaxParams.forEach(el => {
+        const speed = parseFloat(el.getAttribute('data-speed'));
+
+        // Use fromTo for stable scrubbing
+        gsap.fromTo(el,
+            { y: 0 },
+            {
+                y: () => (window.innerHeight * speed), // Move relative to screen height
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top bottom', // Start when enters viewport
+                    end: 'bottom top',   // End when leaves
+                    scrub: 0
+                }
+            }
+        );
+    });
+}
+
+// ============================================
 // SPLIT TEXT ANIMATIONS
 // ============================================
 function initPageAnimations() {
+    initParallax(); // Start parallax system
+
     // Split all animatable text
     const animateChars = document.querySelectorAll('[data-animate="chars"]');
     const animateLines = document.querySelectorAll('[data-animate="lines"]');
@@ -245,6 +274,9 @@ function initPageAnimations() {
 
     // Fade animations
     animateFade.forEach(el => {
+        // Prepare hidden elements
+        gsap.set(el, { autoAlpha: 1 });
+
         gsap.from(el, {
             scrollTrigger: {
                 trigger: el,
@@ -261,6 +293,7 @@ function initPageAnimations() {
     // Hero title special animation
     const heroTitle = document.querySelector('.hero-title');
     if (heroTitle) {
+        gsap.set(heroTitle, { autoAlpha: 1 }); // Reveal container
         const heroSplit = new SplitType(heroTitle, { types: 'chars, lines' });
 
         gsap.from(heroSplit.chars, {
@@ -271,6 +304,23 @@ function initPageAnimations() {
             duration: 1.2,
             ease: 'power4.out',
             delay: 0.2
+        });
+    }
+
+    // Hero Tagline (ensure visible)
+    const heroTagline = document.querySelector('.hero-tagline');
+    if (heroTagline) gsap.set(heroTagline, { autoAlpha: 1 });
+
+    // Hero CTA
+    const heroCta = document.querySelector('.hero-cta');
+    if (heroCta) {
+        gsap.set(heroCta, { autoAlpha: 1 });
+        gsap.from(heroCta, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: 'power2.out',
+            delay: 1.0 // Wait for text
         });
     }
 
@@ -297,69 +347,78 @@ function initPageAnimations() {
 }
 
 // ============================================
-// WORK GALLERY PREVIEW
+// WORK HOVER ACCORDION
 // ============================================
-const workItems = document.querySelectorAll('.work-item');
-const workPreview = document.getElementById('work-preview');
-const workPreviewImg = workPreview?.querySelector('.work-preview-img');
+const workCards = document.querySelectorAll('.work-card');
 
-let previewX = 0;
-let previewY = 0;
-let previewCurrentX = 0;
-let previewCurrentY = 0;
+if (workCards.length > 0) {
+    // Set initial state
+    workCards[0].classList.add('active');
 
-if (workPreview) {
-    workItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            const imgUrl = item.getAttribute('data-img');
-            if (imgUrl && workPreviewImg) {
-                workPreviewImg.style.backgroundImage = `url(${imgUrl})`;
-                workPreview.classList.add('active');
-            }
-        });
-
-        item.addEventListener('mouseleave', () => {
-            workPreview.classList.remove('active');
-        });
-
-        item.addEventListener('mousemove', (e) => {
-            previewX = e.clientX + 20;
-            previewY = e.clientY + 20;
+    workCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            // Deactivate all others
+            workCards.forEach(c => c.classList.remove('active'));
+            // Activate current
+            card.classList.add('active');
         });
     });
-
-    function updatePreview() {
-        const dx = previewX - previewCurrentX;
-        const dy = previewY - previewCurrentY;
-
-        previewCurrentX += dx * 0.1;
-        previewCurrentY += dy * 0.1;
-
-        workPreview.style.transform = `translate(${previewCurrentX}px, ${previewCurrentY}px)`;
-        requestAnimationFrame(updatePreview);
-    }
-    updatePreview();
 }
 
 // ============================================
-// SCENE INDICATOR
+// STATS ENTRANCE
+// ============================================
+const statItems = document.querySelectorAll('.stat');
+if (statItems.length > 0) {
+    gsap.from(statItems, {
+        scrollTrigger: {
+            trigger: '.about-stats',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power2.out'
+    });
+}
+
+
+
+// ============================================
+// SCENE INDICATOR & BACKGROUND MOOD
 // ============================================
 const sceneCurrent = document.getElementById('scene-current');
 const sections = document.querySelectorAll('[data-scene]');
 
+const MOOD_MAP = {
+    '01': 'home',    // Hero
+    '02': 'home',    // About
+    '03': 'work',    // Work
+    '04': 'work',    // Process
+    '05': 'work',    // Services
+    '06': 'contact', // Testimonial
+    '07': 'contact'  // Contact
+};
+
 sections.forEach((section, index) => {
     ScrollTrigger.create({
         trigger: section,
-        start: 'top center',
-        end: 'bottom center',
+        start: 'top 60%', // Trigger earlier for better feel
+        end: 'bottom 60%',
         onEnter: () => {
-            if (sceneCurrent) {
-                sceneCurrent.textContent = section.getAttribute('data-scene');
+            const id = section.getAttribute('data-scene');
+            if (sceneCurrent) sceneCurrent.textContent = id;
+            if (window.BG_ENGINE && MOOD_MAP[id]) {
+                window.BG_ENGINE.setMood(MOOD_MAP[id]);
             }
         },
         onEnterBack: () => {
-            if (sceneCurrent) {
-                sceneCurrent.textContent = section.getAttribute('data-scene');
+            const id = section.getAttribute('data-scene');
+            if (sceneCurrent) sceneCurrent.textContent = id;
+            if (window.BG_ENGINE && MOOD_MAP[id]) {
+                window.BG_ENGINE.setMood(MOOD_MAP[id]);
             }
         }
     });
@@ -384,21 +443,70 @@ updateTime();
 // ============================================
 // VELOCITY DISPLAY
 // ============================================
+// ============================================
+// VELOCITY DISPLAY & BACKGROUND SYNC
+// ============================================
 const velocityDisplay = document.getElementById('velocity');
 lenis.on('scroll', (e) => {
     if (velocityDisplay) {
         velocityDisplay.textContent = Math.abs(e.velocity).toFixed(2);
+    }
+    // Update Background Engine Physics
+    if (window.BG_ENGINE) {
+        window.BG_ENGINE.setScrollVelocity(e.velocity);
     }
 });
 
 // ============================================
 // MARQUEE SPEED BASED ON SCROLL
 // ============================================
+// ============================================
+// SMOOTH SCROLL VELOCITY MARQUEE
+// ============================================
 const marqueeTrack = document.querySelector('.marquee-track');
-if (marqueeTrack) {
+const marqueeItems = document.querySelectorAll('.marquee-text');
+
+if (marqueeTrack && marqueeItems.length > 0) {
+    let progress = 0;
+    let baseSpeed = 0.5; // Pixels per frame
+    let scrollSpeed = 0; // Added velocity
+
+    // Calculate total width of one set of text
+    // Assuming simple duplication for loop
+    const itemWidth = marqueeItems[0].offsetWidth;
+
+    function animateMarquee() {
+        // Smoothly decay scroll speed influence
+        scrollSpeed *= 0.95;
+
+        // Combined speed
+        const currentSpeed = baseSpeed + scrollSpeed;
+
+        // Move
+        progress -= currentSpeed;
+
+        // Loop logic: when we've moved past one item width, reset
+        // The track typically contains 2 copies. We slide left.
+        // When abs(progress) >= width, we add width to progress
+        if (Math.abs(progress) >= itemWidth) {
+            progress += itemWidth;
+        }
+
+        // Apply transform
+        // translate3d for GPU perf
+        marqueeTrack.style.transform = `translate3d(${progress}px, 0, 0)`;
+
+        requestAnimationFrame(animateMarquee);
+    }
+
+    // Start loop
+    requestAnimationFrame(animateMarquee);
+
+    // Inject scroll velocity from Lenis
     lenis.on('scroll', (e) => {
-        const speed = 1 + Math.abs(e.velocity) * 0.5;
-        marqueeTrack.style.animationDuration = `${30 / speed}s`;
+        // Add scroll velocity to marquee speed
+        // Sensitivity factor 0.2
+        scrollSpeed += Math.abs(e.velocity) * 0.2;
     });
 }
 
