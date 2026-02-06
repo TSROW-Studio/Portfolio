@@ -52,11 +52,18 @@ const geometries = [
 ];
 
 const material = new THREE.LineBasicMaterial({
-    color: 0x444444, // Dark Grey
+    color: new THREE.Color(0x444444), // Dark Grey
     transparent: true,
     opacity: 0.3,
     linewidth: 1 // Note: Windows WebGL implementation often limits this to 1
 });
+
+// Mood color targets (interpolated in animate loop)
+const MOOD_COLORS = {
+    home:    new THREE.Color(0x444444), // Neutral grey
+    work:    new THREE.Color(0x666688), // Slightly purple-blue tint
+    contact: new THREE.Color(0x334444)  // Teal-dark
+};
 
 // Create Objects
 const objects = [];
@@ -126,6 +133,32 @@ function animate() {
 
         state.mood += (state.targetMood - state.mood) * 0.01; // Ultra slow mood shift
 
+        // === MOOD-REACTIVE VISUALS ===
+        // Map mood: -0.5 (contact/frozen) → 0 (home/calm) → 1 (work/intense)
+        const moodNorm = (state.mood + 0.5) / 1.5; // Normalize to 0–1
+
+        // Rotation speed scales with mood
+        const moodRotationMultiplier = 0.5 + moodNorm * 1.5; // 0.5x (frozen) → 2x (intense)
+
+        // Wireframe opacity reacts to mood
+        const moodOpacity = 0.15 + moodNorm * 0.3; // 0.15 (frozen) → 0.45 (intense)
+        material.opacity = moodOpacity;
+
+        // Wireframe color interpolation
+        let targetColor;
+        if (state.mood > 0.3) {
+            targetColor = MOOD_COLORS.work;
+        } else if (state.mood < -0.2) {
+            targetColor = MOOD_COLORS.contact;
+        } else {
+            targetColor = MOOD_COLORS.home;
+        }
+        material.color.lerp(targetColor, 0.005); // Ultra smooth color shift
+
+        // Fog density reacts to mood (denser when frozen, clearer when intense)
+        const moodFog = 0.06 - moodNorm * 0.03; // 0.06 (frozen) → 0.03 (intense)
+        scene.fog.density += (moodFog - scene.fog.density) * 0.01;
+
         // Camera Parallax (Mouse) - Reduced Amplitude
         camera.position.x += (state.mouseX * 2 - camera.position.x) * 0.02;
         camera.position.y += (-state.mouseY * 2 - camera.position.y) * 0.02;
@@ -133,20 +166,21 @@ function animate() {
 
         // Group Rotation (CONSTANT SMOOTH ROTATION)
         // Decoupled from scroll delta to prevent jitter
-        group.rotation.y += CONFIG.baseSpeed;
-        group.rotation.x += CONFIG.baseSpeed * 0.5;
+        group.rotation.y += CONFIG.baseSpeed * moodRotationMultiplier;
+        group.rotation.x += CONFIG.baseSpeed * 0.5 * moodRotationMultiplier;
 
         // Individual Object Animation
         objects.forEach((obj, i) => {
-            // Self Rotation - Constant smooth speed
-            obj.rotation.x += obj.userData.rotX;
-            obj.rotation.y += obj.userData.rotY;
+            // Self Rotation - Speed influenced by mood
+            obj.rotation.x += obj.userData.rotX * moodRotationMultiplier;
+            obj.rotation.y += obj.userData.rotY * moodRotationMultiplier;
 
-            // Float / Breathe
+            // Float / Breathe - Amplitude influenced by mood
             const time = Date.now() * 0.0002; // Extremely slow breathe
+            const breatheAmplitude = 0.1 + moodNorm * 0.2; // 0.1 (frozen) → 0.3 (intense)
 
             // Positions float gently
-            obj.position.y = obj.userData.baseY + Math.sin(time + obj.userData.randomPhase) * 0.2;
+            obj.position.y = obj.userData.baseY + Math.sin(time + obj.userData.randomPhase) * breatheAmplitude;
 
             // Scroll "Warp" effect - Z-axis ONLY
             // This is the only place scroll affects physics now (linear movement, no rotation)

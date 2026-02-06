@@ -25,6 +25,75 @@ gsap.ticker.add((time) => {
 gsap.ticker.lagSmoothing(0);
 
 // ============================================
+// DEVICE & ANIMATION CONFIG
+// ============================================
+const IS_MOBILE = window.matchMedia('(max-width: 768px)').matches;
+
+// Mobile-tuned animation parameters (snappier on small screens)
+const ANIM = {
+    chars: {
+        y: IS_MOBILE ? 60 : 100,
+        rotateX: IS_MOBILE ? 0 : -90,
+        stagger: IS_MOBILE ? 0.04 : 0.02,
+        duration: IS_MOBILE ? 0.6 : 1
+    },
+    lines: {
+        stagger: IS_MOBILE ? 0.08 : 0.15,
+        duration: IS_MOBILE ? 0.7 : 1.2
+    },
+    words: {
+        y: IS_MOBILE ? 20 : 30,
+        stagger: IS_MOBILE ? 0.02 : 0.03,
+        duration: IS_MOBILE ? 0.5 : 0.8
+    },
+    fade: {
+        y: IS_MOBILE ? 25 : 40,
+        duration: IS_MOBILE ? 0.6 : 1
+    },
+    hero: {
+        y: IS_MOBILE ? 80 : 150,
+        rotateX: IS_MOBILE ? 0 : -45,
+        stagger: IS_MOBILE ? 0.04 : 0.03,
+        duration: IS_MOBILE ? 0.8 : 1.2
+    }
+};
+
+// ============================================
+// IMAGE BLUR-UP LOADING
+// ============================================
+function initBlurUpImages() {
+    const images = document.querySelectorAll('.work-card img, .modal-hero-img');
+
+    images.forEach(img => {
+        // Skip already-loaded images
+        if (img.complete && img.naturalWidth > 0) {
+            img.classList.add('img-loaded');
+            return;
+        }
+
+        img.addEventListener('load', () => {
+            // Smooth reveal: blur dissolves over 0.8s
+            gsap.to(img, {
+                filter: img.closest('.work-card.active')
+                    ? 'grayscale(0%) brightness(1) blur(0px)'
+                    : 'grayscale(100%) brightness(0.6) blur(0px)',
+                duration: 0.8,
+                ease: 'power2.out',
+                onComplete: () => img.classList.add('img-loaded')
+            });
+        });
+
+        img.addEventListener('error', () => {
+            // Fallback: still remove blur on error
+            img.classList.add('img-loaded');
+        });
+    });
+}
+
+// Run on DOM ready and after preloader
+initBlurUpImages();
+
+// ============================================
 // PRELOADER
 // ============================================
 const preloader = document.getElementById('preloader');
@@ -209,7 +278,10 @@ function initParallax() {
 // SPLIT TEXT ANIMATIONS
 // ============================================
 function initPageAnimations() {
-    initParallax(); // Start parallax system
+    // Skip parallax on mobile for performance (scrub animations are expensive)
+    if (!IS_MOBILE) {
+        initParallax();
+    }
 
     // Split all animatable text
     const animateChars = document.querySelectorAll('[data-animate="chars"]');
@@ -227,11 +299,11 @@ function initPageAnimations() {
                 start: 'top 85%',
                 toggleActions: 'play none none reverse'
             },
-            y: 100,
+            y: ANIM.chars.y,
             opacity: 0,
-            rotateX: -90,
-            stagger: 0.02,
-            duration: 1,
+            rotateX: ANIM.chars.rotateX,
+            stagger: ANIM.chars.stagger,
+            duration: ANIM.chars.duration,
             ease: 'power3.out'
         });
     });
@@ -248,8 +320,8 @@ function initPageAnimations() {
             },
             yPercent: 100,
             opacity: 0,
-            stagger: 0.15,
-            duration: 1.2,
+            stagger: ANIM.lines.stagger,
+            duration: ANIM.lines.duration,
             ease: 'power4.out'
         });
     });
@@ -264,10 +336,10 @@ function initPageAnimations() {
                 start: 'top 85%',
                 toggleActions: 'play none none reverse'
             },
-            y: 30,
+            y: ANIM.words.y,
             opacity: 0,
-            stagger: 0.03,
-            duration: 0.8,
+            stagger: ANIM.words.stagger,
+            duration: ANIM.words.duration,
             ease: 'power2.out'
         });
     });
@@ -283,9 +355,9 @@ function initPageAnimations() {
                 start: 'top 85%',
                 toggleActions: 'play none none reverse'
             },
-            y: 40,
+            y: ANIM.fade.y,
             opacity: 0,
-            duration: 1,
+            duration: ANIM.fade.duration,
             ease: 'power2.out'
         });
     });
@@ -297,11 +369,11 @@ function initPageAnimations() {
         const heroSplit = new SplitType(heroTitle, { types: 'chars, lines' });
 
         gsap.from(heroSplit.chars, {
-            y: 150,
+            y: ANIM.hero.y,
             opacity: 0,
-            rotateX: -45,
-            stagger: 0.03,
-            duration: 1.2,
+            rotateX: ANIM.hero.rotateX,
+            stagger: ANIM.hero.stagger,
+            duration: ANIM.hero.duration,
             ease: 'power4.out',
             delay: 0.2
         });
@@ -718,3 +790,274 @@ setVH();
 window.addEventListener('resize', setVH);
 
 console.log('🚀 TSROW Studio — Loaded');
+
+// ============================================
+// CASE STUDY MODAL
+// ============================================
+const CASE_STUDIES = {
+    aerospace: {
+        title: 'AEROSPACE MONOLITH',
+        category: 'WEBGL / E-COMMERCE',
+        subtitle: 'A fully immersive 3D product experience for a premium aerospace brand, redefining how luxury hardware is presented online.',
+        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200',
+        stats: [
+            { value: '340%', label: 'CONVERSION LIFT' },
+            { value: '4.2M', label: 'UNIQUE VISITORS' },
+            { value: '12s', label: 'AVG. SESSION TIME' }
+        ],
+        challenge: 'Aerospace Monolith needed to convey the precision engineering of their products in a digital space. Traditional e-commerce felt flat and generic — failing to communicate the weight, texture, and craftsmanship of titanium-forged components. Their existing conversion rate was below industry average at 0.8%.',
+        approach: 'We built a WebGL-powered product configurator with real-time material rendering. Every product page became a cinematic experience — users could rotate, zoom, and inspect products in photorealistic 3D. The checkout flow was redesigned with micro-animations that reduced cognitive load and created a sense of ceremony around each purchase.',
+        tech: ['Three.js', 'WebGL Shaders', 'GSAP', 'Shopify Hydrogen', 'React Three Fiber', 'Blender']
+    },
+    onyx: {
+        title: 'ONYX ARCHIVES',
+        category: 'ARCHIVAL SYSTEM',
+        subtitle: 'A next-generation digital archive for one of the world\'s largest private art collections, built for preservation and discovery.',
+        image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=1200',
+        stats: [
+            { value: '50K+', label: 'ARTWORKS INDEXED' },
+            { value: '99.9%', label: 'UPTIME SLA' },
+            { value: '<200ms', label: 'SEARCH LATENCY' }
+        ],
+        challenge: 'The Onyx Foundation owned over 50,000 artworks spanning five centuries, but their cataloging system was fragmented across spreadsheets, legacy databases, and physical index cards. Researchers had no unified way to search, cross-reference, or discover connections between pieces.',
+        approach: 'We designed a headless CMS architecture with a custom search engine powered by vector embeddings for semantic art discovery. The interface uses a masonry grid with infinite scroll, high-DPI zoom capabilities, and a timeline visualization that maps the entire collection chronologically. Every detail was crafted for art historians and curators.',
+        tech: ['Next.js', 'Sanity CMS', 'Algolia', 'PostgreSQL', 'Cloudinary', 'Figma']
+    },
+    carbon: {
+        title: 'CARBON FINANCE',
+        category: 'FINTECH / IDENTITY',
+        subtitle: 'Complete brand identity and product design for a carbon credit trading platform disrupting environmental finance.',
+        image: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?w=1200',
+        stats: [
+            { value: '$180M', label: 'TRADING VOLUME' },
+            { value: '28', label: 'COUNTRIES SERVED' },
+            { value: '4.8★', label: 'APP STORE RATING' }
+        ],
+        challenge: 'Carbon Finance was entering a market dominated by institutional-grade tools that felt impenetrable to smaller businesses. They needed a brand and product experience that made carbon credit trading feel accessible, trustworthy, and even aspirational — without dumbing down the complexity.',
+        approach: 'We developed a complete brand identity system — from logo to motion guidelines — rooted in the visual language of growth and transformation. The trading dashboard uses data visualization techniques borrowed from Bloomberg Terminal but reimagined with modern UI patterns. Real-time charts, portfolio analytics, and one-click trading create a premium experience.',
+        tech: ['React', 'D3.js', 'Node.js', 'WebSocket', 'Stripe', 'AWS']
+    },
+    vanguard: {
+        title: 'VANGUARD MUSEUM',
+        category: 'EXPERIENTIAL',
+        subtitle: 'An interactive virtual museum experience that blends physical exhibitions with immersive digital storytelling.',
+        image: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=1200',
+        stats: [
+            { value: '2.1M', label: 'VIRTUAL VISITORS' },
+            { value: '8min', label: 'AVG. ENGAGEMENT' },
+            { value: '15', label: 'EXHIBITIONS LIVE' }
+        ],
+        challenge: 'The Vanguard Museum wanted to extend their physical exhibitions into the digital realm — not as a flat website, but as a true spatial experience. Previous attempts at "virtual tours" felt like glorified slideshows. They needed something that captured the awe of walking through their galleries.',
+        approach: 'We created a first-person navigable 3D environment using photogrammetry scans of actual gallery spaces. Visitors can walk through exhibitions, approach artworks for high-resolution detail views, and access curator commentary via spatial audio. The experience adapts between WebGL on desktop and AR on mobile devices.',
+        tech: ['Three.js', 'Photogrammetry', 'Web Audio API', 'WebXR', 'GSAP', 'Cloudflare Workers']
+    },
+    noir: {
+        title: 'NOIR HOSPITALITY',
+        category: 'LUXURY / BOOKING',
+        subtitle: 'A bespoke booking platform for an ultra-luxury boutique hotel chain, where every interaction feels like a concierge service.',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200',
+        stats: [
+            { value: '67%', label: 'BOOKING INCREASE' },
+            { value: '$1,200', label: 'AVG. BOOKING VALUE' },
+            { value: '22s', label: 'TIME TO BOOK' }
+        ],
+        challenge: 'Noir Hospitality\'s properties charge $2,000+ per night, but their booking experience felt no different from a budget chain. High-net-worth guests were abandoning the site and calling concierge directly. The digital experience needed to match the physical luxury of their properties.',
+        approach: 'We designed a booking flow that feels like a private concierge conversation. Instead of a calendar grid, guests describe their ideal stay and our AI-assisted system suggests dates, suites, and experiences. Cinematic video backgrounds, smooth page transitions, and a monochromatic palette create an atmosphere of understated elegance. The entire booking takes under 30 seconds.',
+        tech: ['Nuxt.js', 'GSAP', 'Prismic CMS', 'Stripe', 'OpenAI API', 'Vercel']
+    }
+};
+
+const caseModal = document.getElementById('case-modal');
+const caseModalClose = document.getElementById('case-modal-close');
+
+function openCaseStudy(caseKey) {
+    const data = CASE_STUDIES[caseKey];
+    if (!data || !caseModal) return;
+
+    // Populate modal content
+    document.getElementById('case-hero-img').src = data.image;
+    document.getElementById('case-hero-img').alt = data.title;
+    document.getElementById('case-category').textContent = data.category;
+    document.getElementById('case-title').textContent = data.title;
+    document.getElementById('case-subtitle').textContent = data.subtitle;
+    document.getElementById('case-challenge').textContent = data.challenge;
+    document.getElementById('case-approach').textContent = data.approach;
+
+    // Build stats
+    const statsContainer = document.getElementById('case-stats');
+    statsContainer.innerHTML = data.stats.map(s =>
+        `<div class="modal-stat"><span class="modal-stat-value">${s.value}</span><span class="modal-stat-label">${s.label}</span></div>`
+    ).join('');
+
+    // Build tech tags
+    const techContainer = document.getElementById('case-tech');
+    techContainer.innerHTML = data.tech.map(t =>
+        `<span class="tech-tag">${t}</span>`
+    ).join('');
+
+    // Show modal with GSAP
+    caseModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    lenis.stop();
+
+    const tl = gsap.timeline();
+    tl.fromTo(caseModal, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: 'power2.out' })
+      .fromTo(caseModal.querySelector('.modal-container'), {
+          y: 60, scale: 0.97
+      }, {
+          y: 0, scale: 1, duration: 0.6, ease: 'power3.out'
+      }, '-=0.2')
+      .fromTo(caseModal.querySelector('.modal-hero-img'), {
+          scale: 1.15
+      }, {
+          scale: 1, duration: 1.2, ease: 'power2.out'
+      }, '-=0.5');
+
+    // Reset scroll position inside modal
+    const modalScroll = caseModal.querySelector('.modal-scroll');
+    if (modalScroll) modalScroll.scrollTop = 0;
+}
+
+function closeCaseStudy() {
+    if (!caseModal) return;
+
+    gsap.to(caseModal, {
+        autoAlpha: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+            caseModal.classList.remove('active');
+            document.body.style.overflow = '';
+            lenis.start();
+        }
+    });
+}
+
+// Bind work card clicks
+document.querySelectorAll('.work-card[data-case]').forEach(card => {
+    card.addEventListener('click', () => {
+        const caseKey = card.getAttribute('data-case');
+        openCaseStudy(caseKey);
+    });
+    card.style.cursor = 'pointer';
+});
+
+// Close modal
+if (caseModalClose) {
+    caseModalClose.addEventListener('click', closeCaseStudy);
+}
+if (caseModal) {
+    caseModal.addEventListener('click', (e) => {
+        if (e.target === caseModal) closeCaseStudy();
+    });
+}
+
+// ============================================
+// CONTACT FORM MODAL
+// ============================================
+const contactModal = document.getElementById('contact-modal');
+const contactModalClose = document.getElementById('contact-modal-close');
+const openContactBtn = document.getElementById('open-contact-form');
+const leadForm = document.getElementById('lead-form');
+const formSuccess = document.getElementById('form-success');
+
+function openContactModal() {
+    if (!contactModal) return;
+
+    contactModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    lenis.stop();
+
+    const tl = gsap.timeline();
+    tl.fromTo(contactModal, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: 'power2.out' })
+      .fromTo(contactModal.querySelector('.modal-container'), {
+          y: 60, scale: 0.97
+      }, {
+          y: 0, scale: 1, duration: 0.6, ease: 'power3.out'
+      }, '-=0.2');
+
+    // Reset scroll and form
+    const modalScroll = contactModal.querySelector('.modal-scroll');
+    if (modalScroll) modalScroll.scrollTop = 0;
+    if (leadForm) leadForm.reset();
+    if (formSuccess) formSuccess.classList.remove('visible');
+}
+
+function closeContactModal() {
+    if (!contactModal) return;
+
+    gsap.to(contactModal, {
+        autoAlpha: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+            contactModal.classList.remove('active');
+            document.body.style.overflow = '';
+            lenis.start();
+        }
+    });
+}
+
+// Bind open button
+if (openContactBtn) {
+    openContactBtn.addEventListener('click', openContactModal);
+}
+
+// Close modal
+if (contactModalClose) {
+    contactModalClose.addEventListener('click', closeContactModal);
+}
+if (contactModal) {
+    contactModal.addEventListener('click', (e) => {
+        if (e.target === contactModal) closeContactModal();
+    });
+}
+
+// Form submission (Formspree or custom handler)
+if (leadForm) {
+    leadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = leadForm.querySelector('.btn-submit');
+        const originalText = submitBtn.querySelector('.btn-text').textContent;
+        submitBtn.querySelector('.btn-text').textContent = 'SENDING...';
+        submitBtn.disabled = true;
+
+        try {
+            const formData = new FormData(leadForm);
+            const response = await fetch(leadForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                // Show success state
+                if (formSuccess) formSuccess.classList.add('visible');
+                gsap.from(formSuccess, { y: 20, opacity: 0, duration: 0.6, ease: 'power2.out' });
+
+                // Auto-close after delay
+                setTimeout(() => {
+                    closeContactModal();
+                }, 3000);
+            } else {
+                throw new Error('Form submission failed');
+            }
+        } catch (error) {
+            // Fallback: open mailto
+            submitBtn.querySelector('.btn-text').textContent = 'ERROR — TRY EMAIL';
+            setTimeout(() => {
+                submitBtn.querySelector('.btn-text').textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        }
+    });
+}
+
+// Close any modal on Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (caseModal && caseModal.classList.contains('active')) closeCaseStudy();
+        if (contactModal && contactModal.classList.contains('active')) closeContactModal();
+    }
+});

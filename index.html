@@ -192,7 +192,7 @@
                 <div class="work-gallery-wrapper">
                     <div class="work-gallery-track" data-speed="-0.05">
                         <!-- Card 1 -->
-                        <div class="work-card">
+                        <div class="work-card" data-case="aerospace">
                             <div class="work-card-window">
                                 <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800"
                                     alt="Aerospace Monolith" loading="lazy">
@@ -204,7 +204,7 @@
                         </div>
 
                         <!-- Card 2 -->
-                        <div class="work-card">
+                        <div class="work-card" data-case="onyx">
                             <div class="work-card-window">
                                 <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800"
                                     alt="Onyx Archives" loading="lazy">
@@ -216,7 +216,7 @@
                         </div>
 
                         <!-- Card 3 -->
-                        <div class="work-card">
+                        <div class="work-card" data-case="carbon">
                             <div class="work-card-window">
                                 <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?w=800"
                                     alt="Carbon Finance" loading="lazy">
@@ -228,7 +228,7 @@
                         </div>
 
                         <!-- Card 4 -->
-                        <div class="work-card">
+                        <div class="work-card" data-case="vanguard">
                             <div class="work-card-window">
                                 <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800"
                                     alt="Vanguard Museum" loading="lazy">
@@ -240,7 +240,7 @@
                         </div>
 
                         <!-- Card 5 -->
-                        <div class="work-card">
+                        <div class="work-card" data-case="noir">
                             <div class="work-card-window">
                                 <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
                                     alt="Noir Hospitality" loading="lazy">
@@ -374,6 +374,10 @@
                             <a href="mailto:hello@tsrow.studio" class="contact-email magnetic" data-strength="50">
                                 <span class="email-text" data-scramble>HELLO@TSROW.STUDIO</span>
                             </a>
+                            <button class="btn-primary btn-open-form magnetic" data-strength="40" id="open-contact-form">
+                                <span class="btn-text">START A PROJECT</span>
+                                <span class="btn-arrow">→</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -437,6 +441,109 @@
 
         </div>
     </main>
+
+    <!-- ======================= -->
+    <!-- CASE STUDY MODAL         -->
+    <!-- ======================= -->
+    <div class="modal-overlay" id="case-modal">
+        <div class="modal-container">
+            <button class="modal-close" id="case-modal-close" aria-label="Close modal">
+                <span></span><span></span>
+            </button>
+            <div class="modal-scroll">
+                <div class="modal-hero">
+                    <img class="modal-hero-img" id="case-hero-img" src="" alt="">
+                    <div class="modal-hero-overlay"></div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-header">
+                        <span class="modal-category" id="case-category"></span>
+                        <h2 class="modal-title" id="case-title"></h2>
+                        <p class="modal-subtitle" id="case-subtitle"></p>
+                    </div>
+                    <div class="modal-stats" id="case-stats"></div>
+                    <div class="modal-content">
+                        <div class="modal-section">
+                            <h3>THE CHALLENGE</h3>
+                            <p id="case-challenge"></p>
+                        </div>
+                        <div class="modal-section">
+                            <h3>OUR APPROACH</h3>
+                            <p id="case-approach"></p>
+                        </div>
+                        <div class="modal-section">
+                            <h3>TECHNOLOGIES</h3>
+                            <div class="modal-tech-tags" id="case-tech"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= -->
+    <!-- CONTACT FORM MODAL       -->
+    <!-- ======================= -->
+    <div class="modal-overlay" id="contact-modal">
+        <div class="modal-container modal-container--form">
+            <button class="modal-close" id="contact-modal-close" aria-label="Close modal">
+                <span></span><span></span>
+            </button>
+            <div class="modal-scroll">
+                <div class="modal-body">
+                    <div class="modal-header">
+                        <span class="modal-category">NEW PROJECT</span>
+                        <h2 class="modal-title">LET'S TALK.</h2>
+                        <p class="modal-subtitle">Tell us about your vision and we'll respond within 24 hours.</p>
+                    </div>
+                    <form class="lead-form" id="lead-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                        <div class="form-group">
+                            <label class="form-label" for="lead-name">YOUR NAME</label>
+                            <input class="form-input" type="text" id="lead-name" name="name" required placeholder="Jane Smith">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lead-email">EMAIL</label>
+                            <input class="form-input" type="email" id="lead-email" name="email" required placeholder="jane@company.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lead-type">PROJECT TYPE</label>
+                            <select class="form-input form-select" id="lead-type" name="project_type" required>
+                                <option value="" disabled selected>SELECT ONE</option>
+                                <option value="brand">Brand Identity</option>
+                                <option value="website">Website / WebGL</option>
+                                <option value="ecommerce">E-Commerce</option>
+                                <option value="app">Web Application</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lead-budget">BUDGET RANGE</label>
+                            <select class="form-input form-select" id="lead-budget" name="budget" required>
+                                <option value="" disabled selected>SELECT RANGE</option>
+                                <option value="50-100k">$50K — $100K</option>
+                                <option value="100-250k">$100K — $250K</option>
+                                <option value="250-500k">$250K — $500K</option>
+                                <option value="500k+">$500K+</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lead-message">PROJECT BRIEF</label>
+                            <textarea class="form-input form-textarea" id="lead-message" name="message" rows="4" placeholder="Tell us about your project..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary btn-submit magnetic" data-strength="30">
+                            <span class="btn-text">SEND INQUIRY</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                        <div class="form-success" id="form-success">
+                            <span class="form-success-icon">✓</span>
+                            <p>YOUR MESSAGE HAS BEEN SENT. WE'LL BE IN TOUCH SHORTLY.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

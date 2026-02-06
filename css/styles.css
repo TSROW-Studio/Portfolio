@@ -846,14 +846,28 @@ body.cursor-hover .cursor-label {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(100%) brightness(0.6);
+    filter: grayscale(100%) brightness(0.6) blur(12px);
     transition: all 0.8s ease;
     transform: scale(1.2);
 }
 
+.work-card img.img-loaded {
+    filter: grayscale(100%) brightness(0.6) blur(0px);
+}
+
 .work-card.active img {
-    filter: grayscale(0%) brightness(1);
+    filter: grayscale(0%) brightness(1) blur(0px);
     transform: scale(1);
+}
+
+/* Modal hero image blur-up */
+.modal-hero-img {
+    filter: blur(15px);
+    transition: filter 0.8s ease;
+}
+
+.modal-hero-img.img-loaded {
+    filter: blur(0px);
 }
 
 .work-card-info {
@@ -2661,5 +2675,404 @@ body {
     .menu-toggle:focus-visible {
         outline: 2px solid var(--accent);
         outline-offset: 4px;
+    }
+}
+
+/* ================================================
+   MODAL SYSTEM (Case Study + Contact Form)
+   ================================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    padding: var(--gutter);
+}
+
+.modal-overlay.active {
+    visibility: visible;
+}
+
+.modal-container {
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    background: #0e0e0e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-container--form {
+    max-width: 600px;
+}
+
+.modal-scroll {
+    overflow-y: auto;
+    max-height: 90vh;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.modal-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+/* Close Button */
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    z-index: 10;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.modal-close span {
+    position: absolute;
+    width: 18px;
+    height: 1.5px;
+    background: var(--white);
+}
+
+.modal-close span:first-child {
+    transform: rotate(45deg);
+}
+
+.modal-close span:last-child {
+    transform: rotate(-45deg);
+}
+
+/* Hero Image */
+.modal-hero {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.modal-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, #0e0e0e, transparent);
+    pointer-events: none;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: clamp(30px, 6vw, 60px);
+}
+
+.modal-header {
+    margin-bottom: 40px;
+}
+
+.modal-category {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 15px;
+}
+
+.modal-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 15px;
+}
+
+.modal-subtitle {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    color: var(--white-muted);
+    line-height: 1.6;
+    max-width: 60ch;
+}
+
+/* Stats Row */
+.modal-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 30px 0;
+    border-top: 1px solid var(--grid-line);
+    border-bottom: 1px solid var(--grid-line);
+    margin-bottom: 40px;
+}
+
+.modal-stat-value {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.modal-stat-label {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--white-muted);
+}
+
+/* Content Sections */
+.modal-section {
+    margin-bottom: 35px;
+}
+
+.modal-section h3 {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--grid-line);
+}
+
+.modal-section p {
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    color: var(--white-muted);
+    line-height: 1.7;
+}
+
+/* Tech Tags */
+.modal-tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tech-tag {
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--white-muted);
+    transition: all 0.3s ease;
+}
+
+.tech-tag:hover {
+    border-color: var(--accent);
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ================================================
+   LEAD CAPTURE FORM STYLES
+   ================================================ */
+.lead-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--white-muted);
+}
+
+.form-input {
+    padding: 16px 20px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.form-input:focus {
+    border-color: var(--accent);
+}
+
+.form-select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.form-select option {
+    background: #0e0e0e;
+    color: var(--white);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+    max-height: 200px;
+}
+
+.btn-submit {
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-submit:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Form Success State */
+.form-success {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-success.visible {
+    display: block;
+}
+
+.form-success-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 15px;
+    color: var(--accent);
+}
+
+.form-success p {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--white-muted);
+    line-height: 1.6;
+}
+
+/* Contact CTA Layout (email + button side by side) */
+.contact-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-open-form {
+    background: transparent;
+}
+
+/* ================================================
+   MODAL RESPONSIVE STYLES
+   ================================================ */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .modal-container {
+        max-height: 95vh;
+        border-bottom: none;
+    }
+
+    .modal-hero {
+        height: 250px;
+    }
+
+    .modal-body {
+        padding: clamp(24px, 5vw, 40px);
+    }
+
+    .modal-stats {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .modal-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    .modal-stat-value {
+        font-size: clamp(1.2rem, 4vw, 1.5rem);
+        margin-bottom: 0;
+    }
+
+    .modal-title {
+        font-size: clamp(1.25rem, 5vw, 2rem);
+    }
+
+    .modal-close {
+        top: 12px;
+        right: 12px;
+    }
+
+    .tech-tag {
+        font-size: 9px;
+        padding: 6px 12px;
+    }
+
+    /* Form responsive */
+    .form-input {
+        font-size: 16px; /* Prevent iOS zoom */
+        padding: 14px 16px;
+    }
+
+    .form-select {
+        font-size: 16px;
     }
 }
