@@ -758,27 +758,42 @@ scrambleElements.forEach(el => {
 // PROCESS STEPS ANIMATION
 // ============================================
 const processSteps = document.querySelectorAll('.process-step');
-processSteps.forEach((step, index) => {
-    gsap.from(step, {
-        scrollTrigger: {
-            trigger: step,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-        },
-        y: 50,
+const processGrid = document.querySelector('.process-grid');
+
+if (processSteps.length > 0 && processGrid) {
+    // Set initial state for all steps
+    gsap.set(processSteps, {
+        y: 60,
         opacity: 0,
-        duration: 0.8,
-        delay: index * 0.1,
-        ease: 'power2.out'
+        willChange: 'transform, opacity'
     });
-});
+
+    // Create a timeline for smooth staggered reveal
+    const stepsTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: processGrid,
+            start: 'top 75%',
+            end: 'bottom 60%',
+            scrub: 0.8,  // Smooth scrub for buttery animation
+        }
+    });
+
+    // Animate all steps with stagger
+    stepsTl.to(processSteps, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.15,
+        ease: 'power3.out',
+        clearProps: 'willChange'  // Clean up after animation
+    });
+}
 
 // ============================================
 // METHODOLOGY HEADER PINNING
 // ============================================
 const processSection = document.querySelector('.section-process');
 const processHeader = document.querySelector('.section-process .section-header');
-const processGrid = document.querySelector('.process-grid');
 
 if (processSection && processHeader && processGrid) {
     // Pin the methodology header while scrolling through process steps
