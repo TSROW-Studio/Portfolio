@@ -68,24 +68,32 @@ function initBlurUpImages() {
         // Skip already-loaded images
         if (img.complete && img.naturalWidth > 0) {
             img.classList.add('img-loaded');
+            // Clear any inline filter so CSS takes over
+            img.style.filter = '';
             return;
         }
 
         img.addEventListener('load', () => {
-            // Smooth reveal: blur dissolves over 0.8s
+            // Smooth reveal animation
+            const isActive = img.closest('.work-card.active');
             gsap.to(img, {
-                filter: img.closest('.work-card.active')
+                filter: isActive
                     ? 'grayscale(0%) brightness(1) blur(0px)'
-                    : 'grayscale(100%) brightness(0.6) blur(0px)',
+                    : 'grayscale(100%) brightness(0.6) blur(5px)',
                 duration: 0.8,
                 ease: 'power2.out',
-                onComplete: () => img.classList.add('img-loaded')
+                onComplete: () => {
+                    img.classList.add('img-loaded');
+                    // Clear inline style so CSS classes take over
+                    img.style.filter = '';
+                }
             });
         });
 
         img.addEventListener('error', () => {
-            // Fallback: still remove blur on error
+            // Fallback: still mark as loaded on error
             img.classList.add('img-loaded');
+            img.style.filter = '';
         });
     });
 }
@@ -421,9 +429,58 @@ function initPageAnimations() {
 // ============================================
 const workCards = document.querySelectorAll('.work-card');
 
+// Helper function to pause/play GIFs by swapping src
+function pauseGif(img) {
+    if (!img || !img.src) return;
+    // Only handle GIFs
+    if (!img.src.toLowerCase().includes('.gif')) return;
+
+    // Store original src if not already stored
+    if (!img.dataset.gifSrc) {
+        img.dataset.gifSrc = img.src;
+    }
+    // Create a canvas to capture the current frame
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth || img.width;
+    canvas.height = img.naturalHeight || img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    // Set src to the static frame
+    try {
+        img.src = canvas.toDataURL('image/png');
+    } catch (e) {
+        // If cross-origin, just leave it
+    }
+}
+
+function playGif(img) {
+    if (!img) return;
+    // Restore original GIF src
+    if (img.dataset.gifSrc) {
+        img.src = img.dataset.gifSrc;
+    }
+}
+
+// Function to update card GIF states
+function updateCardGifStates() {
+    workCards.forEach(card => {
+        const img = card.querySelector('img');
+        if (card.classList.contains('active')) {
+            playGif(img);
+        } else {
+            pauseGif(img);
+        }
+    });
+}
+
 if (workCards.length > 0) {
     // Set initial state
     workCards[0].classList.add('active');
+
+    // Initial GIF states - pause all non-active, play active
+    setTimeout(() => {
+        updateCardGifStates();
+    }, 100);
 
     // Check if touch device
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -441,11 +498,14 @@ if (workCards.length > 0) {
 
         const cardObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
+                const img = entry.target.querySelector('img');
                 if (entry.isIntersecting) {
                     // Optional: Add subtle visual feedback when card is in center
                     entry.target.classList.add('in-view');
+                    playGif(img);
                 } else {
                     entry.target.classList.remove('in-view');
+                    pauseGif(img);
                 }
             });
         }, observerOptions);
@@ -470,6 +530,8 @@ if (workCards.length > 0) {
                 workCards.forEach(c => c.classList.remove('active'));
                 // Activate current
                 card.classList.add('active');
+                // Update GIF states
+                updateCardGifStates();
             });
         });
     }
@@ -807,6 +869,21 @@ const CASE_STUDIES = {
         approach: 'We built a WebGL-powered product configurator with real-time material rendering. Every product page became a cinematic experience — users could rotate, zoom, and inspect products in photorealistic 3D. The checkout flow was redesigned with micro-animations that reduced cognitive load and created a sense of ceremony around each purchase.',
         tech: ['Three.js', 'WebGL Shaders', 'GSAP', 'Shopify Hydrogen', 'React Three Fiber', 'Blender']
     },
+    quoteweb: {
+        title: 'QUOTEWEB',
+        category: 'PWA / QUOTES APP',
+        subtitle: 'A beautiful, minimalist Progressive Web App that delivers daily inspiration through curated quotes with smooth animations.',
+        image: 'assets/work1.gif',
+        stats: [
+            { value: 'PWA', label: 'INSTALLABLE' },
+            { value: '∞', label: 'DAILY QUOTES' },
+            { value: '60fps', label: 'SMOOTH ANIMATIONS' }
+        ],
+        challenge: 'Creating a lightweight yet visually stunning quotes application that works offline and feels native on any device. The goal was to deliver daily inspiration with an immersive, distraction-free reading experience.',
+        approach: 'Built as a Progressive Web App with offline-first architecture. Features include smooth CSS animations, blur transitions, responsive typography, and a clean minimalist interface. The app is fully installable and works seamlessly across all devices.',
+        tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA', 'Service Workers', 'Web Manifest'],
+        liveUrl: 'https://chronos778.github.io/quote.web/'
+    },
     onyx: {
         title: 'ONYX ARCHIVES',
         category: 'ARCHIVAL SYSTEM',
@@ -892,6 +969,24 @@ function openCaseStudy(caseKey) {
     techContainer.innerHTML = data.tech.map(t =>
         `<span class="tech-tag">${t}</span>`
     ).join('');
+
+    // Remove existing modal-links if any
+    const existingLinks = techContainer.parentNode.querySelector('.modal-links');
+    if (existingLinks) existingLinks.remove();
+
+    // Add project links if available
+    let linksHtml = '';
+    if (data.liveUrl || data.githubUrl) {
+        linksHtml = '<div class="modal-links">';
+        if (data.liveUrl) {
+            linksHtml += `<a href="${data.liveUrl}" target="_blank" rel="noopener noreferrer" class="modal-link">VIEW LIVE →</a>`;
+        }
+        if (data.githubUrl) {
+            linksHtml += `<a href="${data.githubUrl}" target="_blank" rel="noopener noreferrer" class="modal-link">VIEW CODE →</a>`;
+        }
+        linksHtml += '</div>';
+    }
+    techContainer.insertAdjacentHTML('afterend', linksHtml);
 
     // Show modal with GSAP
     caseModal.classList.add('active');
