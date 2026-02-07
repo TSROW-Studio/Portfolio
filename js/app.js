@@ -278,10 +278,8 @@ function initParallax() {
 // SPLIT TEXT ANIMATIONS
 // ============================================
 function initPageAnimations() {
-    // Skip parallax on mobile for performance (scrub animations are expensive)
-    if (!IS_MOBILE) {
-        initParallax();
-    }
+    // Initialize parallax on all devices
+    initParallax();
 
     // Split all animatable text
     const animateChars = document.querySelectorAll('[data-animate="chars"]');
@@ -1061,3 +1059,186 @@ document.addEventListener('keydown', (e) => {
         if (contactModal && contactModal.classList.contains('active')) closeContactModal();
     }
 });
+
+// ============================================
+// PAGE TRANSITIONS
+// ============================================
+const pageTransition = document.getElementById('page-transition');
+const transitionPanels = document.querySelectorAll('.transition-panel');
+
+function animatePageTransition(targetId, callback) {
+    if (!pageTransition || transitionPanels.length === 0) {
+        if (callback) callback();
+        return;
+    }
+
+    const tl = gsap.timeline();
+
+    // Panels slide in from opposite directions
+    tl.to(transitionPanels[0], {
+        scaleY: 1,
+        duration: 0.5,
+        ease: 'power4.inOut'
+    })
+        .to(transitionPanels[1], {
+            scaleY: 1,
+            duration: 0.5,
+            ease: 'power4.inOut'
+        }, '-=0.4')
+        .add(() => {
+            // Execute callback (scroll to target)
+            if (callback) callback();
+        })
+        .to(transitionPanels, {
+            scaleY: 0,
+            duration: 0.6,
+            ease: 'power4.inOut',
+            stagger: 0.1,
+            delay: 0.2
+        })
+        .set(transitionPanels[0], { transformOrigin: 'bottom' })
+        .set(transitionPanels[1], { transformOrigin: 'top' });
+}
+
+// Intercept nav link clicks for smooth transitions
+const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link, .footer-links a[href^="#"], .hero-cta a[href^="#"]');
+
+navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href || !href.startsWith('#')) return;
+
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const target = document.getElementById(targetId);
+
+        if (!target) {
+            // If no target, just scroll to top
+            lenis.scrollTo(0, { duration: 1.5 });
+            return;
+        }
+
+        // Close mobile menu if open
+        if (document.body.classList.contains('menu-open')) {
+            document.body.classList.remove('menu-open');
+            lenis.start();
+        }
+
+        // Animate transition then scroll
+        animatePageTransition(targetId, () => {
+            lenis.scrollTo(target, {
+                duration: 1.2,
+                offset: 0,
+                immediate: false
+            });
+        });
+    });
+});
+
+// ============================================
+// STAGGERED SCROLL REVEALS
+// ============================================
+
+// Service Categories
+const serviceCategories = document.querySelectorAll('.service-category');
+if (serviceCategories.length > 0) {
+    ScrollTrigger.create({
+        trigger: '.services-list',
+        start: 'top 80%',
+        onEnter: () => {
+            serviceCategories.forEach((cat, i) => {
+                setTimeout(() => {
+                    cat.classList.add('revealed');
+                }, i * 150);
+            });
+        },
+        once: true
+    });
+}
+
+// Footer Columns
+const footerCols = document.querySelectorAll('.footer-col');
+if (footerCols.length > 0) {
+    ScrollTrigger.create({
+        trigger: '.footer-grid',
+        start: 'top 85%',
+        onEnter: () => {
+            footerCols.forEach((col, i) => {
+                setTimeout(() => {
+                    col.classList.add('revealed');
+                }, i * 100);
+            });
+        },
+        once: true
+    });
+}
+
+// ============================================
+// ANIMATED LINE DRAWING
+// ============================================
+const animatedLines = document.querySelectorAll('.step-line, .label-line');
+animatedLines.forEach(line => {
+    ScrollTrigger.create({
+        trigger: line,
+        start: 'top 85%',
+        onEnter: () => {
+            line.classList.add('drawn');
+        },
+        once: true
+    });
+});
+
+// ============================================
+// TESTIMONIAL QUOTE REVEAL
+// ============================================
+const testimonialQuote = document.querySelector('.testimonial-quote');
+if (testimonialQuote) {
+    ScrollTrigger.create({
+        trigger: testimonialQuote,
+        start: 'top 80%',
+        onEnter: () => {
+            testimonialQuote.classList.add('visible');
+        },
+        once: true
+    });
+}
+
+// ============================================
+// COUNTER GLOW EFFECT
+// ============================================
+const counterNumbers = document.querySelectorAll('.stat-number[data-count]');
+counterNumbers.forEach(counter => {
+    ScrollTrigger.create({
+        trigger: counter,
+        start: 'top 80%',
+        onEnter: () => {
+            counter.classList.add('counting');
+            setTimeout(() => {
+                counter.classList.remove('counting');
+            }, 2000);
+        },
+        once: true
+    });
+});
+
+// ============================================
+// WORK CARD IMAGE SCALE ON SCROLL
+// ============================================
+const workCardImages = document.querySelectorAll('.work-card-window img');
+workCardImages.forEach(img => {
+    gsap.fromTo(img,
+        { scale: 1.15 },
+        {
+            scale: 1,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: img.closest('.work-card'),
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1
+            }
+        }
+    );
+});
+
+console.log('✨ TSROW Studio — Enhanced Animations Loaded');
