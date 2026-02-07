@@ -115,13 +115,13 @@ img {
 
 /* ECLIPSE GLOW UTILITIES */
 .glow-text {
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.25), 0 0 10px rgba(255, 255, 255, 0.1);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.18), 0 0 10px rgba(255, 255, 255, 0.06);
 }
 
 .hero-title,
 .about-statement h2,
 .section-title {
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.14);
 }
 
 /* Spotlights behind text */
@@ -145,10 +145,10 @@ img {
     height: 150%;
     z-index: -1;
     /* Behind text, above void */
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
     filter: blur(40px);
     pointer-events: none;
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 /* Grain Overlay */
@@ -3294,12 +3294,12 @@ body {
 
 /* Stat Number Glow on Count */
 .stat-number.counting {
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
 }
 
 /* Contact Email Hover Glow */
 .contact-email:hover {
-    text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
 }
 
 /* Section Index Pulse */
@@ -3337,7 +3337,7 @@ body {
 }
 
 .contact-title:hover {
-    text-shadow: 0 0 60px rgba(255, 255, 255, 0.25);
+    text-shadow: 0 0 60px rgba(255, 255, 255, 0.18);
 }
 
 /* ================================================
