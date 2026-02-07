@@ -9,7 +9,7 @@
 gsap.registerPlugin(ScrollTrigger);
 
 const lenis = new Lenis({
-    duration: 1.4,
+    duration: 1.8,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     orientation: 'vertical',
     smoothWheel: true,
@@ -28,33 +28,35 @@ gsap.ticker.lagSmoothing(0);
 // DEVICE & ANIMATION CONFIG
 // ============================================
 const IS_MOBILE = window.matchMedia('(max-width: 768px)').matches;
+const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Mobile-tuned animation parameters (snappier on small screens)
 const ANIM = {
+    pause: IS_MOBILE ? 0.08 : 0.12,
     chars: {
         y: IS_MOBILE ? 60 : 100,
         rotateX: IS_MOBILE ? 0 : -90,
         stagger: IS_MOBILE ? 0.04 : 0.02,
-        duration: IS_MOBILE ? 0.6 : 1
+        duration: IS_MOBILE ? 0.8 : 1.2
     },
     lines: {
-        stagger: IS_MOBILE ? 0.08 : 0.15,
-        duration: IS_MOBILE ? 0.7 : 1.2
+        stagger: IS_MOBILE ? 0.1 : 0.18,
+        duration: IS_MOBILE ? 0.9 : 1.5
     },
     words: {
         y: IS_MOBILE ? 20 : 30,
-        stagger: IS_MOBILE ? 0.02 : 0.03,
-        duration: IS_MOBILE ? 0.5 : 0.8
+        stagger: IS_MOBILE ? 0.03 : 0.05,
+        duration: IS_MOBILE ? 0.7 : 1
     },
     fade: {
         y: IS_MOBILE ? 25 : 40,
-        duration: IS_MOBILE ? 0.6 : 1
+        duration: IS_MOBILE ? 0.8 : 1.2
     },
     hero: {
         y: IS_MOBILE ? 80 : 150,
         rotateX: IS_MOBILE ? 0 : -45,
-        stagger: IS_MOBILE ? 0.04 : 0.03,
-        duration: IS_MOBILE ? 0.8 : 1.2
+        stagger: IS_MOBILE ? 0.05 : 0.04,
+        duration: IS_MOBILE ? 1 : 1.4
     }
 };
 
@@ -310,6 +312,7 @@ function initPageAnimations() {
             rotateX: ANIM.chars.rotateX,
             stagger: ANIM.chars.stagger,
             duration: ANIM.chars.duration,
+            delay: ANIM.pause,
             ease: 'power3.out'
         });
     });
@@ -328,6 +331,7 @@ function initPageAnimations() {
             opacity: 0,
             stagger: ANIM.lines.stagger,
             duration: ANIM.lines.duration,
+            delay: ANIM.pause,
             ease: 'power4.out'
         });
     });
@@ -346,6 +350,7 @@ function initPageAnimations() {
             opacity: 0,
             stagger: ANIM.words.stagger,
             duration: ANIM.words.duration,
+            delay: ANIM.pause,
             ease: 'power2.out'
         });
     });
@@ -364,6 +369,7 @@ function initPageAnimations() {
             y: ANIM.fade.y,
             opacity: 0,
             duration: ANIM.fade.duration,
+            delay: ANIM.pause,
             ease: 'power2.out'
         });
     });
@@ -381,7 +387,7 @@ function initPageAnimations() {
             stagger: ANIM.hero.stagger,
             duration: ANIM.hero.duration,
             ease: 'power4.out',
-            delay: 0.2
+            delay: 0.2 + ANIM.pause
         });
     }
 
@@ -398,9 +404,11 @@ function initPageAnimations() {
             opacity: 0,
             duration: 1,
             ease: 'power2.out',
-            delay: 1.0 // Wait for text
+            delay: 1.0 + ANIM.pause // Wait for text
         });
     }
+
+    initAmbientBreath();
 
     // Counter animations
     const counters = document.querySelectorAll('[data-count]');
@@ -422,6 +430,45 @@ function initPageAnimations() {
             }
         });
     });
+}
+
+// ============================================
+// AMBIENT BREATHING MOTION
+// ============================================
+function initAmbientBreath() {
+    if (IS_MOBILE || PREFERS_REDUCED_MOTION) return;
+
+    const breathPrimary = document.querySelectorAll(
+        '.hero-content, .section-header, .about-statement'
+    );
+
+    const breathSecondary = document.querySelectorAll(
+        '.work-card-window, .process-step, .service-category, .testimonial-quote'
+    );
+
+    if (breathPrimary.length > 0) {
+        gsap.to(breathPrimary, {
+            scale: 1.01,
+            duration: 7,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+            transformOrigin: 'center',
+            stagger: 1.4
+        });
+    }
+
+    if (breathSecondary.length > 0) {
+        gsap.to(breathSecondary, {
+            scale: 1.006,
+            duration: 9,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+            transformOrigin: 'center',
+            stagger: 0.6
+        });
+    }
 }
 
 // ============================================
@@ -574,6 +621,35 @@ const MOOD_MAP = {
     '07': 'contact'  // Contact
 };
 
+const MOOD_VALUES = {
+    home: 0.0,
+    work: 1.0,
+    contact: -0.5
+};
+
+const moodProxy = { value: 0.0 };
+let moodTween = null;
+
+function rampMood(moodName) {
+    if (!window.BG_ENGINE) return;
+    const targetValue = MOOD_VALUES[moodName];
+    if (typeof targetValue !== 'number') return;
+
+    if (moodTween) moodTween.kill();
+    moodTween = gsap.to(moodProxy, {
+        value: targetValue,
+        duration: 0.7,
+        ease: 'sine.inOut',
+        onUpdate: () => {
+            if (window.BG_ENGINE && window.BG_ENGINE.setMoodValue) {
+                window.BG_ENGINE.setMoodValue(moodProxy.value);
+            } else if (window.BG_ENGINE) {
+                window.BG_ENGINE.setMood(moodName);
+            }
+        }
+    });
+}
+
 sections.forEach((section, index) => {
     ScrollTrigger.create({
         trigger: section,
@@ -582,16 +658,12 @@ sections.forEach((section, index) => {
         onEnter: () => {
             const id = section.getAttribute('data-scene');
             if (sceneCurrent) sceneCurrent.textContent = id;
-            if (window.BG_ENGINE && MOOD_MAP[id]) {
-                window.BG_ENGINE.setMood(MOOD_MAP[id]);
-            }
+            if (MOOD_MAP[id]) rampMood(MOOD_MAP[id]);
         },
         onEnterBack: () => {
             const id = section.getAttribute('data-scene');
             if (sceneCurrent) sceneCurrent.textContent = id;
-            if (window.BG_ENGINE && MOOD_MAP[id]) {
-                window.BG_ENGINE.setMood(MOOD_MAP[id]);
-            }
+            if (MOOD_MAP[id]) rampMood(MOOD_MAP[id]);
         }
     });
 });

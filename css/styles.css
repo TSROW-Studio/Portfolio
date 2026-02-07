@@ -321,13 +321,13 @@ img {
     position: absolute;
     top: 30px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 6px);
     font-family: var(--font-display);
     font-size: 10px;
     letter-spacing: 2px;
     white-space: nowrap;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s, transform 0.45s var(--ease-out-expo);
 }
 
 body.cursor-hover .cursor-ball {
@@ -337,6 +337,7 @@ body.cursor-hover .cursor-ball {
 
 body.cursor-hover .cursor-label {
     opacity: 1;
+    transform: translate(-50%, 0);
 }
 
 /* Hide on touch */

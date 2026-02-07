@@ -216,5 +216,9 @@ window.BG_ENGINE = {
         if (moodName === 'work') state.targetMood = 1.0;     // Hectic, Fast
         else if (moodName === 'home') state.targetMood = 0.0; // Calm, Float
         else if (moodName === 'contact') state.targetMood = -0.5; // Frozen, Still
+    },
+    setMoodValue: (value) => {
+        const clamped = Math.min(Math.max(value, -0.5), 1.0);
+        state.targetMood = clamped;
     }
 };
