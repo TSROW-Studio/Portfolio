@@ -1101,22 +1101,13 @@ function animatePageTransition(targetId, callback) {
 }
 
 // Intercept nav link clicks for smooth transitions
-const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link, .footer-links a[href^="#"], .hero-cta a[href^="#"]');
+const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link, .footer-links a[href^="#"], .hero-cta a[href^="#"], .logo');
 
 navLinks.forEach(link => {
     const href = link.getAttribute('href');
-    if (!href || !href.startsWith('#')) return;
 
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        const targetId = href.substring(1);
-        const target = document.getElementById(targetId);
-
-        if (!target) {
-            // If no target, just scroll to top
-            lenis.scrollTo(0, { duration: 1.5 });
-            return;
-        }
 
         // Close mobile menu if open
         if (document.body.classList.contains('menu-open')) {
@@ -1124,14 +1115,35 @@ navLinks.forEach(link => {
             lenis.start();
         }
 
-        // Animate transition then scroll
-        animatePageTransition(targetId, () => {
-            lenis.scrollTo(target, {
-                duration: 1.2,
-                offset: 0,
-                immediate: false
+        // If href is # or no target, scroll to top with transition
+        if (!href || href === '#') {
+            animatePageTransition('top', () => {
+                lenis.scrollTo(0, { duration: 1.2, immediate: false });
             });
-        });
+            return;
+        }
+
+        // Handle anchor links
+        if (href.startsWith('#')) {
+            const targetId = href.substring(1);
+            const target = document.getElementById(targetId);
+
+            if (!target) {
+                animatePageTransition('top', () => {
+                    lenis.scrollTo(0, { duration: 1.2 });
+                });
+                return;
+            }
+
+            // Animate transition then scroll
+            animatePageTransition(targetId, () => {
+                lenis.scrollTo(target, {
+                    duration: 1.2,
+                    offset: 0,
+                    immediate: false
+                });
+            });
+        }
     });
 });
 
