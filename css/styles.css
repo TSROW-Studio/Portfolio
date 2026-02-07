@@ -722,7 +722,7 @@ body.cursor-hover .cursor-label {
 
 .about-grid {
     display: grid;
-    grid-template-columns: 150px 1fr 1fr;
+    grid-template-columns: 150px minmax(0, 1fr) minmax(0, 1fr);
     gap: clamp(30px, 5vw, 80px);
 }
 
@@ -774,18 +774,22 @@ body.cursor-hover .cursor-label {
 
 .about-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    /* Reduced gap to fit content better */
     border-top: 1px solid var(--grid-line);
     padding-top: 30px;
 }
 
 .stat-number {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    /* Reduced from 4vw/3.5rem to prevent overflow */
     font-weight: 700;
     display: block;
     margin-bottom: 10px;
+    word-break: break-word;
+    /* Ensure it breaks if absolutely necessary */
 }
 
 .stat-label {
@@ -2711,6 +2715,8 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-container--form {
@@ -2719,7 +2725,13 @@ body {
 
 .modal-scroll {
     overflow-y: auto;
-    max-height: 90vh;
+    flex: 1;
+    min-height: 0;
+    /* Crucial for flex child scrolling */
+    padding-right: 4px;
+    /* Prevent scrollbar overlap visual */
+    overscroll-behavior: contain;
+    /* Prevent chaining */
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
@@ -3068,7 +3080,8 @@ body {
 
     /* Form responsive */
     .form-input {
-        font-size: 16px; /* Prevent iOS zoom */
+        font-size: 16px;
+        /* Prevent iOS zoom */
         padding: 14px 16px;
     }
 

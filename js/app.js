@@ -902,16 +902,16 @@ function openCaseStudy(caseKey) {
 
     const tl = gsap.timeline();
     tl.fromTo(caseModal, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: 'power2.out' })
-      .fromTo(caseModal.querySelector('.modal-container'), {
-          y: 60, scale: 0.97
-      }, {
-          y: 0, scale: 1, duration: 0.6, ease: 'power3.out'
-      }, '-=0.2')
-      .fromTo(caseModal.querySelector('.modal-hero-img'), {
-          scale: 1.15
-      }, {
-          scale: 1, duration: 1.2, ease: 'power2.out'
-      }, '-=0.5');
+        .fromTo(caseModal.querySelector('.modal-container'), {
+            y: 60, scale: 0.97
+        }, {
+            y: 0, scale: 1, duration: 0.6, ease: 'power3.out'
+        }, '-=0.2')
+        .fromTo(caseModal.querySelector('.modal-hero-img'), {
+            scale: 1.15
+        }, {
+            scale: 1, duration: 1.2, ease: 'power2.out'
+        }, '-=0.5');
 
     // Reset scroll position inside modal
     const modalScroll = caseModal.querySelector('.modal-scroll');
@@ -970,11 +970,11 @@ function openContactModal() {
 
     const tl = gsap.timeline();
     tl.fromTo(contactModal, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: 'power2.out' })
-      .fromTo(contactModal.querySelector('.modal-container'), {
-          y: 60, scale: 0.97
-      }, {
-          y: 0, scale: 1, duration: 0.6, ease: 'power3.out'
-      }, '-=0.2');
+        .fromTo(contactModal.querySelector('.modal-container'), {
+            y: 60, scale: 0.97
+        }, {
+            y: 0, scale: 1, duration: 0.6, ease: 'power3.out'
+        }, '-=0.2');
 
     // Reset scroll and form
     const modalScroll = contactModal.querySelector('.modal-scroll');
