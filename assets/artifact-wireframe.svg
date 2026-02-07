@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Wireframe artifact">
+  <rect width="1200" height="800" fill="#0b0b0b"/>
+  <g fill="none" stroke="rgba(245,245,245,0.18)" stroke-width="1">
+    <rect x="80" y="80" width="1040" height="640"/>
+    <rect x="120" y="140" width="520" height="320"/>
+    <rect x="680" y="140" width="400" height="180"/>
+    <rect x="680" y="360" width="400" height="260"/>
+    <line x1="120" y1="520" x2="640" y2="520"/>
+    <line x1="120" y1="560" x2="640" y2="560"/>
+    <line x1="120" y1="600" x2="520" y2="600"/>
+  </g>
+  <g stroke="rgba(245,245,245,0.08)" stroke-width="1">
+    <line x1="80" y1="200" x2="1120" y2="200"/>
+    <line x1="80" y1="400" x2="1120" y2="400"/>
+    <line x1="80" y1="600" x2="1120" y2="600"/>
+  </g>
+</svg>

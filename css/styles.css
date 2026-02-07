@@ -526,20 +526,21 @@ body.cursor-hover .cursor-label {
 .section-index {
     font-family: var(--font-display);
     font-size: 12px;
-    color: var(--accent);
+    color: var(--white);
     letter-spacing: 2px;
 }
 
 .section-title {
     font-family: var(--font-display);
     font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: -0.02em;
+    color: var(--white);
 }
 
 .section-year {
     font-size: 12px;
-    color: var(--white-muted);
+    color: rgba(245, 245, 245, 0.45);
 }
 
 /* ================================================
@@ -770,7 +771,35 @@ body.cursor-hover .cursor-label {
     font-size: clamp(1rem, 1.2vw, 1.15rem);
     color: var(--white-muted);
     line-height: 1.7;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
+}
+
+.about-bullets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 30px;
+    margin: 20px 0 50px;
+    color: rgba(245, 245, 245, 0.8);
+}
+
+.about-bullets li {
+    position: relative;
+    padding-left: 18px;
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    line-height: 1.6;
+}
+    .about-bullets {
+        grid-template-columns: 1fr;
+    }
+
+.about-bullets li::before {
+    content: '—';
+    .modal-artifact-grid {
+        grid-template-columns: 1fr;
+    }
+    position: absolute;
+    left: 0;
+    color: var(--accent);
 }
 
 .about-stats {
@@ -806,6 +835,40 @@ body.cursor-hover .cursor-label {
     padding: 10vh 0;
     /* Natural spacing */
     position: relative;
+}
+
+/* Quiet Section */
+.section-quiet {
+    min-height: 45vh;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--grid-line);
+    border-bottom: 1px solid var(--grid-line);
+    padding: clamp(60px, 10vh, 120px) 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+}
+
+.quiet-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.quiet-label {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: rgba(245, 245, 245, 0.55);
+    margin-bottom: 15px;
+}
+
+.quiet-text {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    color: var(--white-muted);
+    line-height: 1.6;
+    max-width: 32ch;
+    margin: 0 auto;
 }
 
 .work-gallery-wrapper {
@@ -1065,7 +1128,7 @@ body.cursor-hover .cursor-label {
 .step-description {
     font-size: 16px;
     max-width: 600px;
-    color: var(--white-muted);
+    color: rgba(245, 245, 245, 0.6);
 }
 
 /* Responsive */
@@ -2876,7 +2939,7 @@ body {
 
 .modal-subtitle {
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-    color: var(--white-muted);
+    color: rgba(245, 245, 245, 0.65);
     line-height: 1.6;
     max-width: 60ch;
 }
@@ -2906,9 +2969,53 @@ body {
     color: var(--white-muted);
 }
 
+.modal-disciplines {
+    margin: 0 0 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(245, 245, 245, 0.6);
+}
+
+.modal-discipline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.modal-discipline-tags .tech-tag {
+    color: rgba(245, 245, 245, 0.8);
+}
+
 /* Content Sections */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 50px;
+}
+
+.modal-grid .modal-section {
+    margin-bottom: 0;
+}
+
+.modal-grid p {
+    max-width: 38ch;
+}
+
 .modal-section {
-    margin-bottom: 35px;
+    margin-bottom: 0;
 }
 
 .modal-section h3 {
@@ -2923,8 +3030,69 @@ body {
 
 .modal-section p {
     font-size: clamp(0.9rem, 1.1vw, 1rem);
-    color: var(--white-muted);
+    color: rgba(245, 245, 245, 0.6);
     line-height: 1.7;
+}
+
+.modal-results {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: rgba(245, 245, 245, 0.85);
+}
+
+.modal-results li {
+    position: relative;
+    padding-left: 18px;
+    line-height: 1.6;
+}
+
+.modal-results li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+.modal-artifact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.modal-artifact {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0b0b0b;
+    padding: 12px;
+}
+
+.modal-artifact img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modal-artifact span {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(245, 245, 245, 0.6);
+}
+
+@media (max-width: 768px) {
+    .modal-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .modal-grid p {
+        max-width: 100%;
+    }
 }
 
 /* Tech Tags */

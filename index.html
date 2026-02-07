@@ -114,14 +114,14 @@
         <div id="smooth-content">
 
             <!-- HERO -->
-            <section class="section section-hero" data-scene="01">
+            <section class="section section-hero" data-scene="01" data-pace="fast">
                 <div class="hero-content">
-                    <h1 class="hero-title" data-animate="chars" data-speed="0.1">
+                    <h1 class="hero-title" data-animate="chars">
                         <span class="line">DIGITAL</span>
                         <span class="line">REALITY</span>
                         <span class="line">ENGINEERS</span>
                     </h1>
-                    <div class="hero-tagline" data-speed="0.05">
+                    <div class="hero-tagline">
                         <p data-animate="words">We build digital cathedrals for brands who worship at the altar of
                             detail.</p>
                     </div>
@@ -149,7 +149,7 @@
             </section>
 
             <!-- ABOUT -->
-            <section class="section section-about" id="about" data-scene="02">
+            <section class="section section-about" id="about" data-scene="02" data-pace="slow">
                 <div class="container">
                     <div class="about-grid">
                         <div class="about-label">
@@ -165,10 +165,16 @@
                             </h2>
                         </div>
                         <div class="about-description">
-                            <p data-animate="fade">Every pixel is intentional. Every interaction is choreographed. We
-                                reject templates, default solutions, and mediocrity. Our work is for those who
-                                understand that digital presence is not a checkbox—it's a competitive weapon.</p>
-                            <div class="about-stats">
+                            <p data-animate="fade">We design and engineer premium digital experiences where strategy,
+                                craft, and performance move as one.</p>
+                            <p data-animate="fade">Every pixel is intentional. Every interaction is choreographed. Our
+                                work is for leaders who treat digital presence as a competitive weapon.</p>
+                            <ul class="about-bullets" data-animate="fade">
+                                <li>Strategy-first product and brand systems</li>
+                                <li>Performance-obsessed engineering</li>
+                                <li>Conversion-focused storytelling</li>
+                            </ul>
+                            <div class="about-stats" data-pace="crisp">
                                 <div class="stat">
                                     <span class="stat-number" data-count="47">0</span>
                                     <span class="stat-label">PROJECTS DELIVERED</span>
@@ -188,7 +194,7 @@
             </section>
 
             <!-- WORK -->
-            <section class="section section-work" id="work" data-scene="03">
+            <section class="section section-work" id="work" data-scene="03" data-pace="fast">
                 <div class="container">
                     <div class="section-header">
                         <span class="section-index">03</span>
@@ -261,8 +267,18 @@
                 </div>
             </section>
 
+            <!-- QUIET SECTION -->
+            <section class="section section-quiet">
+                <div class="container">
+                    <div class="quiet-content">
+                        <span class="quiet-label">PAUSE</span>
+                        <p class="quiet-text">A moment of restraint to let the work breathe.</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- PROCESS -->
-            <section class="section section-process" data-scene="04">
+            <section class="section section-process" data-scene="04" data-pace="slow">
                 <div class="container">
                     <div class="section-header">
                         <span class="section-index">04</span>
@@ -310,7 +326,7 @@
             </section>
 
             <!-- SERVICES -->
-            <section class="section section-services" data-scene="05">
+            <section class="section section-services" data-scene="05" data-pace="slow">
                 <div class="container">
                     <div class="services-layout">
                         <div class="services-header">
@@ -354,7 +370,7 @@
             </section>
 
             <!-- TESTIMONIAL -->
-            <section class="section section-testimonial" data-scene="06">
+            <section class="section section-testimonial" data-scene="06" data-pace="slow">
                 <div class="container">
                     <div class="testimonial-content">
                         <blockquote class="testimonial-quote" data-animate="words">
@@ -370,7 +386,7 @@
             </section>
 
             <!-- CONTACT -->
-            <section class="section section-contact" id="contact" data-scene="07">
+            <section class="section section-contact" id="contact" data-scene="07" data-pace="fast">
                 <div class="container">
                     <div class="contact-content">
                         <div class="contact-header">
@@ -470,14 +486,28 @@
                         <p class="modal-subtitle" id="case-subtitle"></p>
                     </div>
                     <div class="modal-stats" id="case-stats"></div>
+                    <div class="modal-disciplines">
+                        <span class="modal-label">DISCIPLINES</span>
+                        <div class="modal-discipline-tags" id="case-disciplines"></div>
+                    </div>
                     <div class="modal-content">
-                        <div class="modal-section">
-                            <h3>THE CHALLENGE</h3>
-                            <p id="case-challenge"></p>
+                        <div class="modal-grid">
+                            <div class="modal-section">
+                                <h3>THE CHALLENGE</h3>
+                                <p id="case-challenge"></p>
+                            </div>
+                            <div class="modal-section">
+                                <h3>OUR APPROACH</h3>
+                                <p id="case-approach"></p>
+                            </div>
                         </div>
                         <div class="modal-section">
-                            <h3>OUR APPROACH</h3>
-                            <p id="case-approach"></p>
+                            <h3>RESULTS</h3>
+                            <ul class="modal-results" id="case-results"></ul>
+                        </div>
+                        <div class="modal-section modal-artifacts">
+                            <h3>ARTIFACTS</h3>
+                            <div class="modal-artifact-grid" id="case-artifacts"></div>
                         </div>
                         <div class="modal-section">
                             <h3>TECHNOLOGIES</h3>

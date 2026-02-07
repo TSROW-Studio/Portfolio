@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Motion frames artifact">
+  <rect width="1200" height="800" fill="#0b0b0b"/>
+  <g fill="none" stroke="rgba(245,245,245,0.2)" stroke-width="1">
+    <rect x="120" y="140" width="260" height="520"/>
+    <rect x="470" y="180" width="260" height="440"/>
+    <rect x="820" y="220" width="260" height="360"/>
+  </g>
+  <g stroke="rgba(245,245,245,0.1)" stroke-width="2">
+    <path d="M160 520 C260 420, 320 380, 420 300"/>
+    <path d="M520 560 C620 480, 680 420, 780 340"/>
+    <path d="M880 580 C980 520, 1040 460, 1120 380"/>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">
+  <rect width="900" height="560" fill="#0b0b0b"/>
+  <g fill="#f5f5f5" font-family="Syncopate, sans-serif" font-size="56" letter-spacing="2">
+    <text x="80" y="150">HEADLINE</text>
+  </g>
+  <g fill="#cfcfcf" font-family="Space Grotesk, sans-serif" font-size="30" letter-spacing="1">
+    <text x="80" y="230">Subheading for quick scan</text>
+  </g>
+  <g fill="#9b9b9b" font-family="Space Grotesk, sans-serif" font-size="18" letter-spacing="0.5">
+    <text x="80" y="290">Body text rhythm with balanced leading and intentional cadence.</text>
+    <text x="80" y="320">Secondary text supports long-form narrative blocks.</text>
+  </g>
+  <g stroke="#2d2d2d" stroke-width="1" opacity="0.7">
+    <path d="M80 360H820"/>
+    <path d="M80 430H820"/>
+  </g>
+  <g fill="#7a7a7a" font-family="Space Grotesk, sans-serif" font-size="12" letter-spacing="2">
+    <text x="80" y="390">TYPE SCALE</text>
+    <text x="80" y="460">BASELINE GRID</text>
+  </g>
+</svg>

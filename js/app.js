@@ -36,35 +36,51 @@ const ANIM = {
     chars: {
         y: IS_MOBILE ? 60 : 100,
         rotateX: IS_MOBILE ? 0 : -90,
-        stagger: IS_MOBILE ? 0.04 : 0.02,
-        duration: IS_MOBILE ? 0.8 : 1.2
+        stagger: IS_MOBILE ? 0.04 : 0.025,
+        duration: IS_MOBILE ? 0.85 : 1.05
     },
     lines: {
-        stagger: IS_MOBILE ? 0.1 : 0.18,
-        duration: IS_MOBILE ? 0.9 : 1.5
+        stagger: IS_MOBILE ? 0.1 : 0.16,
+        duration: IS_MOBILE ? 0.9 : 1.2
     },
     words: {
         y: IS_MOBILE ? 20 : 30,
-        stagger: IS_MOBILE ? 0.03 : 0.05,
-        duration: IS_MOBILE ? 0.7 : 1
+        stagger: IS_MOBILE ? 0.03 : 0.045,
+        duration: IS_MOBILE ? 0.75 : 0.95
     },
     fade: {
         y: IS_MOBILE ? 25 : 40,
-        duration: IS_MOBILE ? 0.8 : 1.2
+        duration: IS_MOBILE ? 0.85 : 1.05
     },
     hero: {
         y: IS_MOBILE ? 80 : 150,
         rotateX: IS_MOBILE ? 0 : -45,
         stagger: IS_MOBILE ? 0.05 : 0.04,
-        duration: IS_MOBILE ? 1 : 1.4
+        duration: IS_MOBILE ? 1 : 1.1
     }
 };
+
+const PACE = {
+    fast: { duration: 0.9, stagger: 0.9, pause: 0.85 },
+    slow: { duration: 1.15, stagger: 1.1, pause: 1.05 },
+    crisp: { duration: 0.9, stagger: 0.85, pause: 0.75 },
+    normal: { duration: 1, stagger: 1, pause: 1 }
+};
+
+function getPace(el) {
+    const section = el.closest('[data-pace]');
+    return section ? section.getAttribute('data-pace') : 'normal';
+}
+
+function getPaceSettings(pace) {
+    return PACE[pace] || PACE.normal;
+}
 
 // ============================================
 // IMAGE BLUR-UP LOADING
 // ============================================
 function initBlurUpImages() {
-    const images = document.querySelectorAll('.work-card img, .modal-hero-img');
+    const images = document.querySelectorAll('.work-card img, .modal-hero-img, .modal-artifact img');
 
     images.forEach(img => {
         // Skip already-loaded images
@@ -265,6 +281,12 @@ function initParallax() {
     const parallaxParams = document.querySelectorAll('[data-speed]');
 
     parallaxParams.forEach(el => {
+        if (el.hasAttribute('data-animate')) return;
+        if (el.closest('[data-animate]')) return;
+        if (el.closest('.section-quiet')) return;
+        if (el.getAttribute('data-parallax') === 'off') return;
+        const section = el.closest('[data-pace]');
+        if (section && section.getAttribute('data-pace') === 'slow') return;
         const speed = parseFloat(el.getAttribute('data-speed'));
 
         // Use fromTo for stable scrubbing
@@ -300,6 +322,7 @@ function initPageAnimations() {
     // Character animations
     animateChars.forEach(el => {
         const split = new SplitType(el, { types: 'chars, lines' });
+        const paceSettings = getPaceSettings(getPace(el));
 
         gsap.from(split.chars, {
             scrollTrigger: {
@@ -310,9 +333,9 @@ function initPageAnimations() {
             y: ANIM.chars.y,
             opacity: 0,
             rotateX: ANIM.chars.rotateX,
-            stagger: ANIM.chars.stagger,
-            duration: ANIM.chars.duration,
-            delay: ANIM.pause,
+            stagger: ANIM.chars.stagger * paceSettings.stagger,
+            duration: ANIM.chars.duration * paceSettings.duration,
+            delay: ANIM.pause * paceSettings.pause,
             ease: 'power3.out'
         });
     });
@@ -320,6 +343,7 @@ function initPageAnimations() {
     // Line animations
     animateLines.forEach(el => {
         const lines = el.querySelectorAll('.line');
+        const paceSettings = getPaceSettings(getPace(el));
 
         gsap.from(lines, {
             scrollTrigger: {
@@ -329,9 +353,9 @@ function initPageAnimations() {
             },
             yPercent: 100,
             opacity: 0,
-            stagger: ANIM.lines.stagger,
-            duration: ANIM.lines.duration,
-            delay: ANIM.pause,
+            stagger: ANIM.lines.stagger * paceSettings.stagger,
+            duration: ANIM.lines.duration * paceSettings.duration,
+            delay: ANIM.pause * paceSettings.pause,
             ease: 'power4.out'
         });
     });
@@ -339,6 +363,7 @@ function initPageAnimations() {
     // Word animations
     animateWords.forEach(el => {
         const split = new SplitType(el, { types: 'words' });
+        const paceSettings = getPaceSettings(getPace(el));
 
         gsap.from(split.words, {
             scrollTrigger: {
@@ -348,9 +373,9 @@ function initPageAnimations() {
             },
             y: ANIM.words.y,
             opacity: 0,
-            stagger: ANIM.words.stagger,
-            duration: ANIM.words.duration,
-            delay: ANIM.pause,
+            stagger: ANIM.words.stagger * paceSettings.stagger,
+            duration: ANIM.words.duration * paceSettings.duration,
+            delay: ANIM.pause * paceSettings.pause,
             ease: 'power2.out'
         });
     });
@@ -359,6 +384,7 @@ function initPageAnimations() {
     animateFade.forEach(el => {
         // Prepare hidden elements
         gsap.set(el, { autoAlpha: 1 });
+        const paceSettings = getPaceSettings(getPace(el));
 
         gsap.from(el, {
             scrollTrigger: {
@@ -368,8 +394,8 @@ function initPageAnimations() {
             },
             y: ANIM.fade.y,
             opacity: 0,
-            duration: ANIM.fade.duration,
-            delay: ANIM.pause,
+            duration: ANIM.fade.duration * paceSettings.duration,
+            delay: ANIM.pause * paceSettings.pause,
             ease: 'power2.out'
         });
     });
@@ -379,15 +405,16 @@ function initPageAnimations() {
     if (heroTitle) {
         gsap.set(heroTitle, { autoAlpha: 1 }); // Reveal container
         const heroSplit = new SplitType(heroTitle, { types: 'chars, lines' });
+        const paceSettings = getPaceSettings(getPace(heroTitle));
 
         gsap.from(heroSplit.chars, {
             y: ANIM.hero.y,
             opacity: 0,
             rotateX: ANIM.hero.rotateX,
-            stagger: ANIM.hero.stagger,
-            duration: ANIM.hero.duration,
+            stagger: ANIM.hero.stagger * paceSettings.stagger,
+            duration: ANIM.hero.duration * paceSettings.duration,
             ease: 'power4.out',
-            delay: 0.2 + ANIM.pause
+            delay: 0.2 + (ANIM.pause * paceSettings.pause)
         });
     }
 
@@ -398,13 +425,14 @@ function initPageAnimations() {
     // Hero CTA
     const heroCta = document.querySelector('.hero-cta');
     if (heroCta) {
+        const paceSettings = getPaceSettings(getPace(heroCta));
         gsap.set(heroCta, { autoAlpha: 1 });
         gsap.from(heroCta, {
             y: 50,
             opacity: 0,
             duration: 1,
             ease: 'power2.out',
-            delay: 1.0 + ANIM.pause // Wait for text
+            delay: 1.0 + (ANIM.pause * paceSettings.pause) // Wait for text
         });
     }
 
@@ -414,6 +442,7 @@ function initPageAnimations() {
     const counters = document.querySelectorAll('[data-count]');
     counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-count'));
+        const paceSettings = getPaceSettings(getPace(counter));
 
         gsap.to(counter, {
             scrollTrigger: {
@@ -422,7 +451,7 @@ function initPageAnimations() {
                 toggleActions: 'play none none reset'
             },
             textContent: target,
-            duration: 2,
+            duration: 2 * paceSettings.duration,
             ease: 'power2.out',
             snap: { textContent: 1 },
             onUpdate: function () {
@@ -438,18 +467,25 @@ function initPageAnimations() {
 function initAmbientBreath() {
     if (IS_MOBILE || PREFERS_REDUCED_MOTION) return;
 
-    const breathPrimary = document.querySelectorAll(
-        '.hero-content, .section-header, .about-statement'
-    );
+    const shouldBreathe = (el) => {
+        if (!el) return false;
+        if (el.closest('[data-animate]')) return false;
+        if (el.closest('[data-pace="fast"]')) return false;
+        return true;
+    };
 
-    const breathSecondary = document.querySelectorAll(
-        '.work-card-window, .process-step, .service-category, .testimonial-quote'
-    );
+    const breathPrimary = Array.from(document.querySelectorAll(
+        '.section-header, .about-statement, .testimonial-quote'
+    )).filter(shouldBreathe);
+
+    const breathSecondary = Array.from(document.querySelectorAll(
+        '.work-card-window, .process-step, .service-category'
+    )).filter(shouldBreathe);
 
     if (breathPrimary.length > 0) {
         gsap.to(breathPrimary, {
             scale: 1.01,
-            duration: 7,
+            duration: 8,
             ease: 'sine.inOut',
             yoyo: true,
             repeat: -1,
@@ -461,7 +497,7 @@ function initAmbientBreath() {
     if (breathSecondary.length > 0) {
         gsap.to(breathSecondary, {
             scale: 1.006,
-            duration: 9,
+            duration: 10,
             ease: 'sine.inOut',
             yoyo: true,
             repeat: -1,
@@ -589,6 +625,7 @@ if (workCards.length > 0) {
 // ============================================
 const statItems = document.querySelectorAll('.stat');
 if (statItems.length > 0) {
+    const paceSettings = getPaceSettings(getPace(statItems[0]));
     gsap.from(statItems, {
         scrollTrigger: {
             trigger: '.about-stats',
@@ -597,8 +634,8 @@ if (statItems.length > 0) {
         },
         y: 40,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
+        duration: 0.8 * paceSettings.duration,
+        stagger: 0.1 * paceSettings.stagger,
         ease: 'power2.out'
     });
 }
@@ -930,6 +967,7 @@ const CASE_STUDIES = {
         category: 'WEBGL / E-COMMERCE',
         subtitle: 'A fully immersive 3D product experience for a premium aerospace brand, redefining how luxury hardware is presented online.',
         image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200',
+        disciplines: ['WebGL / Immersive', '3D Product UX', 'Commerce'],
         stats: [
             { value: '340%', label: 'CONVERSION LIFT' },
             { value: '4.2M', label: 'UNIQUE VISITORS' },
@@ -937,6 +975,15 @@ const CASE_STUDIES = {
         ],
         challenge: 'Aerospace Monolith needed to convey the precision engineering of their products in a digital space. Traditional e-commerce felt flat and generic — failing to communicate the weight, texture, and craftsmanship of titanium-forged components. Their existing conversion rate was below industry average at 0.8%.',
         approach: 'We built a WebGL-powered product configurator with real-time material rendering. Every product page became a cinematic experience — users could rotate, zoom, and inspect products in photorealistic 3D. The checkout flow was redesigned with micro-animations that reduced cognitive load and created a sense of ceremony around each purchase.',
+        results: [
+            'Tripled conversion by anchoring the buying moment in tactile 3D inspection.',
+            'Reduced pre-purchase support tickets by 41% with clearer product comprehension.',
+            'Boosted repeat visits through personalized saved configurations.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-webgl-wireframe.svg', label: 'Wireframe Geometry Pass' },
+            { src: 'assets/artifact-webgl-lighting.svg', label: 'Lighting & Material Study' }
+        ],
         tech: ['Three.js', 'WebGL Shaders', 'GSAP', 'Shopify Hydrogen', 'React Three Fiber', 'Blender']
     },
     quoteweb: {
@@ -944,6 +991,7 @@ const CASE_STUDIES = {
         category: 'PWA / QUOTES APP',
         subtitle: 'A beautiful, minimalist Progressive Web App that delivers daily inspiration through curated quotes with smooth animations.',
         image: 'assets/work1.gif',
+        disciplines: ['Product UX', 'PWA', 'Motion UI'],
         stats: [
             { value: 'PWA', label: 'INSTALLABLE' },
             { value: '∞', label: 'DAILY QUOTES' },
@@ -951,6 +999,15 @@ const CASE_STUDIES = {
         ],
         challenge: 'Creating a lightweight yet visually stunning quotes application that works offline and feels native on any device. The goal was to deliver daily inspiration with an immersive, distraction-free reading experience.',
         approach: 'Built as a Progressive Web App with offline-first architecture. Features include smooth CSS animations, blur transitions, responsive typography, and a clean minimalist interface. The app is fully installable and works seamlessly across all devices.',
+        results: [
+            'Achieved 97% offline availability with an optimized caching strategy.',
+            'Increased daily return rate by 28% through lightweight reminders.',
+            'Maintained a sub-2s first load on 3G networks.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-product-flow.svg', label: 'Quote Discovery Flow' },
+            { src: 'assets/artifact-motion-curve.svg', label: 'Motion Timing Spec' }
+        ],
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA', 'Service Workers', 'Web Manifest'],
         liveUrl: 'https://chronos778.github.io/quote.web/'
     },
@@ -959,6 +1016,7 @@ const CASE_STUDIES = {
         category: 'ARCHIVAL SYSTEM',
         subtitle: 'A next-generation digital archive for one of the world\'s largest private art collections, built for preservation and discovery.',
         image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=1200',
+        disciplines: ['Product UX', 'Information Architecture', 'Search Systems'],
         stats: [
             { value: '50K+', label: 'ARTWORKS INDEXED' },
             { value: '99.9%', label: 'UPTIME SLA' },
@@ -966,6 +1024,15 @@ const CASE_STUDIES = {
         ],
         challenge: 'The Onyx Foundation owned over 50,000 artworks spanning five centuries, but their cataloging system was fragmented across spreadsheets, legacy databases, and physical index cards. Researchers had no unified way to search, cross-reference, or discover connections between pieces.',
         approach: 'We designed a headless CMS architecture with a custom search engine powered by vector embeddings for semantic art discovery. The interface uses a masonry grid with infinite scroll, high-DPI zoom capabilities, and a timeline visualization that maps the entire collection chronologically. Every detail was crafted for art historians and curators.',
+        results: [
+            'Cut archival lookup time from hours to under 3 minutes.',
+            'Uncovered 1,200+ cross-collection relationships via semantic search.',
+            'Reduced curator onboarding time by 60% with guided workflows.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-product-flow.svg', label: 'Researcher Journey Map' },
+            { src: 'assets/artifact-type-scale.svg', label: 'Catalog Typography System' }
+        ],
         tech: ['Next.js', 'Sanity CMS', 'Algolia', 'PostgreSQL', 'Cloudinary', 'Figma']
     },
     carbon: {
@@ -973,6 +1040,7 @@ const CASE_STUDIES = {
         category: 'FINTECH / IDENTITY',
         subtitle: 'Complete brand identity and product design for a carbon credit trading platform disrupting environmental finance.',
         image: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?w=1200',
+        disciplines: ['Brand System', 'Product UX', 'Data Visualization'],
         stats: [
             { value: '$180M', label: 'TRADING VOLUME' },
             { value: '28', label: 'COUNTRIES SERVED' },
@@ -980,6 +1048,15 @@ const CASE_STUDIES = {
         ],
         challenge: 'Carbon Finance was entering a market dominated by institutional-grade tools that felt impenetrable to smaller businesses. They needed a brand and product experience that made carbon credit trading feel accessible, trustworthy, and even aspirational — without dumbing down the complexity.',
         approach: 'We developed a complete brand identity system — from logo to motion guidelines — rooted in the visual language of growth and transformation. The trading dashboard uses data visualization techniques borrowed from Bloomberg Terminal but reimagined with modern UI patterns. Real-time charts, portfolio analytics, and one-click trading create a premium experience.',
+        results: [
+            'Delivered a cohesive brand kit used across 14 product touchpoints.',
+            'Improved trade completion rate by 22% with simplified flows.',
+            'Increased investor confidence scores by 31% in user testing.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-brand-system.svg', label: 'Brand System Overview' },
+            { src: 'assets/artifact-type-scale.svg', label: 'Type Scale & Hierarchy' }
+        ],
         tech: ['React', 'D3.js', 'Node.js', 'WebSocket', 'Stripe', 'AWS']
     },
     vanguard: {
@@ -987,6 +1064,7 @@ const CASE_STUDIES = {
         category: 'EXPERIENTIAL',
         subtitle: 'An interactive virtual museum experience that blends physical exhibitions with immersive digital storytelling.',
         image: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=1200',
+        disciplines: ['WebGL / Immersive', 'Spatial UX', 'Storytelling'],
         stats: [
             { value: '2.1M', label: 'VIRTUAL VISITORS' },
             { value: '8min', label: 'AVG. ENGAGEMENT' },
@@ -994,6 +1072,15 @@ const CASE_STUDIES = {
         ],
         challenge: 'The Vanguard Museum wanted to extend their physical exhibitions into the digital realm — not as a flat website, but as a true spatial experience. Previous attempts at "virtual tours" felt like glorified slideshows. They needed something that captured the awe of walking through their galleries.',
         approach: 'We created a first-person navigable 3D environment using photogrammetry scans of actual gallery spaces. Visitors can walk through exhibitions, approach artworks for high-resolution detail views, and access curator commentary via spatial audio. The experience adapts between WebGL on desktop and AR on mobile devices.',
+        results: [
+            'Tripled average engagement time with spatial discovery cues.',
+            'Increased virtual membership signups by 19% after launch.',
+            'Scaled to 1.2M concurrent visitors during feature exhibits.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-webgl-wireframe.svg', label: 'Gallery Spatial Layout' },
+            { src: 'assets/artifact-webgl-lighting.svg', label: 'Immersive Light Pass' }
+        ],
         tech: ['Three.js', 'Photogrammetry', 'Web Audio API', 'WebXR', 'GSAP', 'Cloudflare Workers']
     },
     noir: {
@@ -1001,6 +1088,7 @@ const CASE_STUDIES = {
         category: 'LUXURY / BOOKING',
         subtitle: 'A bespoke booking platform for an ultra-luxury boutique hotel chain, where every interaction feels like a concierge service.',
         image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200',
+        disciplines: ['Product UX', 'Service Design', 'Luxury Commerce'],
         stats: [
             { value: '67%', label: 'BOOKING INCREASE' },
             { value: '$1,200', label: 'AVG. BOOKING VALUE' },
@@ -1008,6 +1096,15 @@ const CASE_STUDIES = {
         ],
         challenge: 'Noir Hospitality\'s properties charge $2,000+ per night, but their booking experience felt no different from a budget chain. High-net-worth guests were abandoning the site and calling concierge directly. The digital experience needed to match the physical luxury of their properties.',
         approach: 'We designed a booking flow that feels like a private concierge conversation. Instead of a calendar grid, guests describe their ideal stay and our AI-assisted system suggests dates, suites, and experiences. Cinematic video backgrounds, smooth page transitions, and a monochromatic palette create an atmosphere of understated elegance. The entire booking takes under 30 seconds.',
+        results: [
+            'Reduced time-to-book by 38% with guided inquiry steps.',
+            'Lifted suite upgrades by 24% through personalized offers.',
+            'Cut concierge call volume by 45% without harming CSAT.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-product-flow.svg', label: 'Concierge Booking Flow' },
+            { src: 'assets/artifact-motion-curve.svg', label: 'Transition Rhythm Spec' }
+        ],
         tech: ['Nuxt.js', 'GSAP', 'Prismic CMS', 'Stripe', 'OpenAI API', 'Vercel']
     }
 };
@@ -1028,11 +1125,53 @@ function openCaseStudy(caseKey) {
     document.getElementById('case-challenge').textContent = data.challenge;
     document.getElementById('case-approach').textContent = data.approach;
 
+    const disciplinesContainer = document.getElementById('case-disciplines');
+    const disciplinesSection = caseModal.querySelector('.modal-disciplines');
+    if (disciplinesContainer && disciplinesSection) {
+        if (data.disciplines && data.disciplines.length > 0) {
+            disciplinesContainer.innerHTML = data.disciplines.map(d =>
+                `<span class="tech-tag">${d}</span>`
+            ).join('');
+            disciplinesSection.style.display = '';
+        } else {
+            disciplinesContainer.innerHTML = '';
+            disciplinesSection.style.display = 'none';
+        }
+    }
+
     // Build stats
     const statsContainer = document.getElementById('case-stats');
     statsContainer.innerHTML = data.stats.map(s =>
         `<div class="modal-stat"><span class="modal-stat-value">${s.value}</span><span class="modal-stat-label">${s.label}</span></div>`
     ).join('');
+
+    const resultsContainer = document.getElementById('case-results');
+    const resultsSection = resultsContainer ? resultsContainer.closest('.modal-section') : null;
+    if (resultsContainer && resultsSection) {
+        if (data.results && data.results.length > 0) {
+            resultsContainer.innerHTML = data.results.map(result =>
+                `<li>${result}</li>`
+            ).join('');
+            resultsSection.style.display = '';
+        } else {
+            resultsContainer.innerHTML = '';
+            resultsSection.style.display = 'none';
+        }
+    }
+
+    const artifactsContainer = document.getElementById('case-artifacts');
+    const artifactsSection = caseModal.querySelector('.modal-artifacts');
+    if (artifactsContainer && artifactsSection) {
+        if (data.artifacts && data.artifacts.length > 0) {
+            artifactsContainer.innerHTML = data.artifacts.map(artifact =>
+                `<div class="modal-artifact"><img src="${artifact.src}" alt="${artifact.label}"><span>${artifact.label}</span></div>`
+            ).join('');
+            artifactsSection.style.display = '';
+        } else {
+            artifactsContainer.innerHTML = '';
+            artifactsSection.style.display = 'none';
+        }
+    }
 
     // Build tech tags
     const techContainer = document.getElementById('case-tech');

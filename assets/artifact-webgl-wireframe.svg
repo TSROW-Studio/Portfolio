@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">
+  <rect width="900" height="560" fill="#0b0b0b"/>
+  <g stroke="#2d2d2d" stroke-width="1" opacity="0.7">
+    <path d="M120 120H780"/>
+    <path d="M120 200H780"/>
+    <path d="M120 280H780"/>
+    <path d="M120 360H780"/>
+    <path d="M120 440H780"/>
+    <path d="M120 120V440"/>
+    <path d="M260 120V440"/>
+    <path d="M400 120V440"/>
+    <path d="M540 120V440"/>
+    <path d="M680 120V440"/>
+    <path d="M780 120V440"/>
+  </g>
+  <g stroke="#f5f5f5" stroke-width="2" fill="none">
+    <polygon points="450,150 610,240 560,410 340,410 290,240"/>
+    <polygon points="450,210 560,270 520,380 380,380 340,270" opacity="0.7"/>
+  </g>
+  <g fill="#8a8a8a" font-family="Space Grotesk, sans-serif" font-size="12" letter-spacing="2">
+    <text x="120" y="500">WIREVIEW</text>
+  </g>
+</svg>

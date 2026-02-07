@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Brand system artifact">
+  <rect width="1200" height="800" fill="#0b0b0b"/>
+  <g fill="none" stroke="rgba(245,245,245,0.18)" stroke-width="1">
+    <rect x="90" y="90" width="1020" height="620"/>
+    <rect x="140" y="150" width="420" height="220"/>
+    <rect x="140" y="410" width="420" height="240"/>
+    <rect x="620" y="150" width="440" height="120"/>
+    <rect x="620" y="310" width="440" height="120"/>
+    <rect x="620" y="470" width="440" height="120"/>
+  </g>
+  <g stroke="rgba(245,245,245,0.1)" stroke-width="1">
+    <line x1="140" y1="200" x2="520" y2="200"/>
+    <line x1="140" y1="240" x2="460" y2="240"/>
+    <line x1="140" y1="460" x2="520" y2="460"/>
+    <line x1="140" y1="500" x2="500" y2="500"/>
+  </g>
+</svg>
