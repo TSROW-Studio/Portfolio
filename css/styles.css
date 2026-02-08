@@ -677,24 +677,30 @@ body.cursor-hover .cursor-label {
    MARQUEE
    ================================================ */
 .section-marquee {
-    min-height: auto;
+    min-height: 0;
     padding: clamp(30px, 5vh, 60px) 0;
     border-top: 1px solid var(--grid-line);
     border-bottom: 1px solid var(--grid-line);
     overflow-x: hidden;
     overflow-y: visible;
+    position: relative;
+    z-index: 2;
 }
 
 .marquee {
     display: flex;
     overflow-x: hidden;
     overflow-y: visible;
+    position: relative;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
 .marquee-track {
     display: flex;
     /* Animation handled in JS for smooth velocity */
     will-change: transform;
+    gap: 40px;
 }
 
 .marquee-text {
@@ -704,7 +710,7 @@ body.cursor-hover .cursor-label {
     letter-spacing: 0.1em;
     line-height: 1.05;
     white-space: nowrap;
-    padding-right: 50px;
+    padding-right: 20px;
     color: var(--white-muted);
 }
 
@@ -1091,8 +1097,9 @@ body.cursor-hover .cursor-label {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.4s ease;
     background: transparent !important;
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    min-height: auto;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -1310,7 +1317,7 @@ body.cursor-hover .cursor-label {
    FOOTER
    ================================================ */
 .section-footer {
-    min-height: auto;
+    min-height: 0;
     padding: clamp(60px, 10vh, 120px) 0 clamp(30px, 5vh, 60px);
     background: #050505;
     position: relative;
@@ -1933,7 +1940,7 @@ body.menu-open .mobile-nav-link:nth-child(4) {
    ================================================ */
 @media (max-height: 500px) and (orientation: landscape) {
     .section-hero {
-        min-height: auto;
+        min-height: 0;
         padding: 80px 0;
     }
 
@@ -1942,7 +1949,7 @@ body.menu-open .mobile-nav-link:nth-child(4) {
     }
 
     .section {
-        min-height: auto;
+        min-height: 0;
         padding: 60px 0;
     }
 }
@@ -2087,7 +2094,7 @@ body {
 
     .work-gallery-wrapper {
         height: auto;
-        min-height: auto;
+        min-height: 0;
         padding: 0 var(--gutter);
         overflow-x: hidden;
     }
@@ -2315,7 +2322,7 @@ body {
 @media (max-width: 768px) {
     .section-contact {
         padding: clamp(48px, 10vh, 80px) 0;
-        min-height: auto;
+        min-height: 0;
     }
 
     .contact-header {
@@ -2700,7 +2707,7 @@ body {
 
 @media (max-width: 768px) and (orientation: landscape) {
     .section-hero {
-        min-height: auto;
+        min-height: 0;
         padding: clamp(60px, 15vh, 100px) 0;
     }
 
@@ -2788,8 +2795,8 @@ body {
     height: 100%;
     z-index: 9000;
     background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2827,8 +2834,13 @@ body {
     /* Prevent scrollbar overlap visual */
     overscroll-behavior: contain;
     /* Prevent chaining */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+@supports (scrollbar-color: auto) {
+    .modal-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    }
 }
 
 .modal-scroll::-webkit-scrollbar {
@@ -3156,8 +3168,8 @@ body {
     font-size: 1rem;
     transition: border-color 0.3s ease;
     outline: none;
-    appearance: none;
     -webkit-appearance: none;
+    appearance: none;
 }
 
 .form-input::placeholder {
