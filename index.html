@@ -35,7 +35,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" type="image/png" href="assets/Tsrow Studio Circular.png">
+    <link rel="icon" type="image/png" href="assets/logo.png">
 </head>
 
 <body>
@@ -220,7 +220,7 @@
                         <!-- Card 1 -->
                         <div class="work-card" data-case="quoteweb">
                             <div class="work-card-window">
-                                <img src="assets/work1.gif" alt="QuoteWeb PWA" loading="lazy">
+                                <video src="assets/work1.webm" loop muted playsinline></video>
                             </div>
                             <div class="work-card-info">
                                 <h3>QUOTEWEB</h3>
@@ -231,7 +231,7 @@
                         <!-- Card 2 -->
                         <div class="work-card" data-case="quotation">
                             <div class="work-card-window">
-                                <img src="assets/work2.gif" alt="Quotation Social" loading="lazy">
+                                <video src="assets/work2.webm" loop muted playsinline></video>
                             </div>
                             <div class="work-card-info">
                                 <h3>QUOTATION</h3>
@@ -239,46 +239,45 @@
                             </div>
                         </div>
 
-                        <!-- Card 3 -->
-                        <div class="work-card" data-case="carbon">
+                        <!-- Card 3: EatWise -->
+                        <div class="work-card" data-case="eatwise">
                             <div class="work-card-window">
-                                <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?w=800"
-                                    alt="Carbon Finance" loading="lazy">
+                                <video src="assets/work3.webm" loop muted playsinline></video>
                             </div>
                             <div class="work-card-info">
-                                <h3>CARBON FINANCE</h3>
-                                <span>FINTECH / IDENTITY</span>
+                                <h3>EATWISE</h3>
+                                <span>AI / RESTAURANT</span>
                             </div>
                         </div>
 
-                        <!-- Card 4 -->
-                        <div class="work-card" data-case="vanguard">
+                        <!-- Card 4: Neural Visualizer -->
+                        <div class="work-card" data-case="neural">
                             <div class="work-card-window">
-                                <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800"
-                                    alt="Vanguard Museum" loading="lazy">
+                                <video src="assets/work4.webm" loop muted playsinline></video>
                             </div>
                             <div class="work-card-info">
-                                <h3>VANGUARD MUSEUM</h3>
-                                <span>EXPERIENTIAL</span>
+                                <h3>NEURAL VISUALIZER</h3>
+                                <span>ML / EDUCATION</span>
                             </div>
                         </div>
 
-                        <!-- Card 5 -->
-                        <div class="work-card" data-case="noir">
+                        <!-- Card 5: SCORD -->
+                        <div class="work-card" data-case="scord">
                             <div class="work-card-window">
-                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
-                                    alt="Noir Hospitality" loading="lazy">
+                                <video src="assets/work5.webm" loop muted playsinline></video>
                             </div>
                             <div class="work-card-info">
-                                <h3>NOIR HOSPITALITY</h3>
-                                <span>LUXURY / BOOKING</span>
+                                <h3>SCORD</h3>
+                                <span>BOT / SOCIAL</span>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
                 <!-- Button moved outside wrapper -->
                 <div style="text-align: center; margin-top: 60px;">
-                    <a href="works.html" class="btn-primary magnetic" data-strength="40">
+                    <a href="html/works.html" class="btn-primary magnetic" data-strength="40">
                         <span class="btn-text">VIEW ALL WORKS</span>
                         <span class="btn-arrow">→</span>
                     </a>
@@ -493,6 +492,8 @@
             <div class="modal-scroll" data-lenis-prevent>
                 <div class="modal-hero">
                     <img class="modal-hero-img" id="case-hero-img" src="" alt="">
+                    <video class="modal-hero-img" id="case-hero-video" loop muted playsinline autoplay
+                        style="display:none;"></video>
                     <div class="modal-hero-overlay"></div>
                 </div>
                 <div class="modal-body">
