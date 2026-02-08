@@ -681,19 +681,17 @@ body.cursor-hover .cursor-label {
     padding: clamp(30px, 5vh, 60px) 0;
     border-top: 1px solid var(--grid-line);
     border-bottom: 1px solid var(--grid-line);
-    overflow-x: hidden;
-    overflow-y: visible;
+    overflow: hidden;
     position: relative;
     z-index: 2;
 }
 
 .marquee {
     display: flex;
-    overflow-x: hidden;
-    overflow-y: visible;
+    overflow: hidden;
     position: relative;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
 .marquee-track {
@@ -804,11 +802,6 @@ body.cursor-hover .cursor-label {
 
 .about-bullets li::before {
     content: '—';
-
-    .modal-artifact-grid {
-        grid-template-columns: 1fr;
-    }
-
     position: absolute;
     left: 0;
     color: var(--accent);
@@ -881,6 +874,21 @@ body.cursor-hover .cursor-label {
     line-height: 1.6;
     max-width: 32ch;
     margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .section-quiet {
+        min-height: 30vh;
+        padding: clamp(40px, 8vh, 80px) 0;
+    }
+
+    .quiet-content {
+        padding: 0 var(--gutter);
+    }
+
+    .quiet-text {
+        font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+    }
 }
 
 .work-gallery-wrapper {
@@ -1013,16 +1021,20 @@ body.cursor-hover .cursor-label {
 
 @media (max-width: 768px) {
 
-    /* On mobile, stack or allow horizontal scroll without accordion */
+    /* On mobile, stack vertically — no accordion */
     .work-gallery-track {
         flex-direction: column;
         height: auto;
     }
 
     .work-card {
-        height: 400px;
+        height: clamp(280px, 60vw, 400px);
         flex: none;
         width: 100%;
+        will-change: auto;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
     }
 
     /* Mobile touch feedback states */
@@ -1033,6 +1045,7 @@ body.cursor-hover .cursor-label {
 
     .work-card.in-view img {
         filter: grayscale(0%) brightness(0.9);
+        transform: scale(1.02);
     }
 
     .work-card.touching {
@@ -1042,6 +1055,36 @@ body.cursor-hover .cursor-label {
 
     .work-card.touching img {
         filter: grayscale(0%) brightness(1);
+    }
+
+    /* Always show card info on mobile */
+    .work-card .work-card-info {
+        transform: translateY(0);
+        opacity: 1;
+        padding: clamp(16px, 4vw, 24px);
+        background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+    }
+
+    .work-card-info h3 {
+        font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+    }
+
+    .work-card-info span {
+        font-size: clamp(9px, 2.5vw, 11px);
+        letter-spacing: 1.5px;
+    }
+
+    .work-card-links {
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .work-card-links a {
+        font-size: 9px;
+        padding: 8px 14px;
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
     }
 }
 
@@ -1990,6 +2033,16 @@ body {
     max-width: 100vw;
 }
 
+/* Hide native scrollbar — Lenis handles smooth scroll */
+@supports (scrollbar-width: none) {
+    html {
+        scrollbar-width: none;
+    }
+}
+html::-webkit-scrollbar {
+    display: none;
+}
+
 /* Use dynamic viewport height for mobile browsers */
 @supports (height: 100dvh) {
 
@@ -2100,39 +2153,7 @@ body {
     }
 
     .work-gallery-track {
-        flex-direction: column;
         gap: clamp(16px, 4vw, 24px);
-        height: auto;
-    }
-
-    .work-card {
-        flex: none;
-        width: 100%;
-        height: clamp(280px, 60vw, 400px);
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    /* On mobile, show all cards with full info visible */
-    .work-card .work-card-info {
-        transform: translateY(0);
-        opacity: 1;
-        padding: clamp(16px, 4vw, 24px);
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
-    }
-
-    .work-card img {
-        filter: grayscale(30%) brightness(0.8);
-        transform: scale(1.05);
-    }
-
-    .work-card-info h3 {
-        font-size: clamp(1.1rem, 4.5vw, 1.5rem);
-    }
-
-    .work-card-info span {
-        font-size: clamp(9px, 2.5vw, 11px);
-        letter-spacing: 1.5px;
     }
 }
 
@@ -2310,9 +2331,20 @@ body {
         padding: clamp(16px, 4vw, 24px) 0;
     }
 
+    .marquee {
+        /* Wider fade edges on mobile for cleaner look */
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+        mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+    }
+
+    .marquee-track {
+        gap: 24px;
+    }
+
     .marquee-text {
         font-size: clamp(0.875rem, 3.5vw, 1.25rem);
-        padding-right: clamp(24px, 6vw, 40px);
+        padding-right: clamp(16px, 4vw, 24px);
+        letter-spacing: 0.08em;
     }
 }
 
@@ -2487,20 +2519,6 @@ body {
         align-items: center;
         justify-content: center;
         padding: clamp(8px, 2vw, 12px) 0;
-    }
-
-    /* UI Footer on mobile */
-    .ui-footer {
-        bottom: clamp(12px, 3vw, 16px);
-        left: clamp(12px, 3vw, 16px);
-        right: clamp(12px, 3vw, 16px);
-        font-size: clamp(8px, 2.5vw, 10px);
-        flex-wrap: wrap;
-    }
-
-    .time-display,
-    .velocity-display {
-        font-size: clamp(8px, 2.5vw, 10px);
     }
 }
 
@@ -3260,7 +3278,9 @@ body {
 
     .modal-container {
         max-height: 95vh;
+        max-height: 95dvh;
         border-bottom: none;
+        border-radius: 12px 12px 0 0;
     }
 
     .modal-hero {
@@ -3295,6 +3315,8 @@ body {
     .modal-close {
         top: 12px;
         right: 12px;
+        min-width: 44px;
+        min-height: 44px;
     }
 
     .tech-tag {
@@ -3620,4 +3642,23 @@ body {
 .modal-link:hover {
     background: var(--white);
     color: var(--black);
+}
+
+@media (max-width: 768px) {
+    .modal-links {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 20px;
+    }
+
+    .modal-link {
+        font-size: 11px;
+        padding: 14px 24px;
+        text-align: center;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }

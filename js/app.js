@@ -787,10 +787,12 @@ function buildMarquee() {
         marqueeBaseItems = Array.from(marqueeTrack.children);
     }
 
+    const isMobileMarquee = window.matchMedia('(max-width: 768px)').matches;
     const containerWidth = marqueeSection.getBoundingClientRect().width;
+    const fillMultiplier = isMobileMarquee ? 1.5 : 2;
     let trackWidth = marqueeTrack.scrollWidth;
 
-    while (trackWidth < containerWidth * 2) {
+    while (trackWidth < containerWidth * fillMultiplier) {
         marqueeBaseItems.forEach(item => {
             const clone = item.cloneNode(true);
             clone.setAttribute('data-marquee-clone', 'true');
@@ -803,7 +805,7 @@ function buildMarquee() {
     gsap.set(marqueeTrack, { x: 0 });
     marqueeTween = gsap.to(marqueeTrack, {
         x: -loopDistance,
-        duration: 28,
+        duration: isMobileMarquee ? 20 : 28,
         ease: 'none',
         repeat: -1
     });
@@ -812,8 +814,16 @@ function buildMarquee() {
         lenis.on('scroll', (e) => {
             if (!marqueeTween) return;
             const velocity = Math.abs(e.velocity);
-            const speedBoost = Math.min(2.5, velocity / 50);
-            const skew = gsap.utils.clamp(-6, 6, e.velocity * 0.08);
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            // Reduced intensity on mobile for smoother feel
+            const maxBoost = isMobile ? 1.5 : 2.5;
+            const velocityDivisor = isMobile ? 80 : 50;
+            const skewMultiplier = isMobile ? 0.03 : 0.08;
+            const maxSkew = isMobile ? 3 : 6;
+
+            const speedBoost = Math.min(maxBoost, velocity / velocityDivisor);
+            const skew = gsap.utils.clamp(-maxSkew, maxSkew, e.velocity * skewMultiplier);
 
             gsap.to(marqueeTween, {
                 timeScale: 1 + speedBoost,
@@ -839,8 +849,10 @@ function buildMarquee() {
 
 buildMarquee();
 
+let marqueeResizeTimer;
 window.addEventListener('resize', () => {
-    buildMarquee();
+    clearTimeout(marqueeResizeTimer);
+    marqueeResizeTimer = setTimeout(() => buildMarquee(), 250);
 });
 
 // ============================================
