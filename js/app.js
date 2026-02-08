@@ -80,38 +80,42 @@ function getPaceSettings(pace) {
 // IMAGE BLUR-UP LOADING
 // ============================================
 function initBlurUpImages() {
-    const images = document.querySelectorAll('.work-card img, .modal-hero-img, .modal-artifact img');
+    const mediaItems = document.querySelectorAll('.work-card img, .work-card video, .modal-hero-img, .modal-artifact img');
 
-    images.forEach(img => {
-        // Skip already-loaded images
-        if (img.complete && img.naturalWidth > 0) {
-            img.classList.add('img-loaded');
-            // Clear any inline filter so CSS takes over
-            img.style.filter = '';
+    mediaItems.forEach(el => {
+        const isVideo = el.tagName === 'VIDEO';
+
+        // Skip already-loaded items
+        if ((isVideo && el.readyState >= 3) || (!isVideo && el.complete && el.naturalWidth > 0)) {
+            el.classList.add('img-loaded');
+            el.style.filter = '';
             return;
         }
 
-        img.addEventListener('load', () => {
-            // Smooth reveal animation
-            const isActive = img.closest('.work-card.active');
-            gsap.to(img, {
+        const onLoad = () => {
+            const isActive = el.closest('.work-card.active');
+            gsap.to(el, {
                 filter: isActive
                     ? 'grayscale(0%) brightness(1) blur(0px)'
                     : 'grayscale(100%) brightness(0.6) blur(5px)',
                 duration: 0.8,
                 ease: 'power2.out',
                 onComplete: () => {
-                    img.classList.add('img-loaded');
-                    // Clear inline style so CSS classes take over
-                    img.style.filter = '';
+                    el.classList.add('img-loaded');
+                    el.style.filter = '';
                 }
             });
-        });
+        };
 
-        img.addEventListener('error', () => {
-            // Fallback: still mark as loaded on error
-            img.classList.add('img-loaded');
-            img.style.filter = '';
+        if (isVideo) {
+            el.addEventListener('loadeddata', onLoad);
+        } else {
+            el.addEventListener('load', onLoad);
+        }
+
+        el.addEventListener('error', () => {
+            el.classList.add('img-loaded');
+            el.style.filter = '';
         });
     });
 }
@@ -513,45 +517,44 @@ function initAmbientBreath() {
 const workCards = document.querySelectorAll('.work-card');
 
 // Helper function to pause/play GIFs by swapping src
-function pauseGif(img) {
-    if (!img || !img.src) return;
-    // Only handle GIFs
-    if (!img.src.toLowerCase().includes('.gif')) return;
-
-    // Store original src if not already stored
-    if (!img.dataset.gifSrc) {
-        img.dataset.gifSrc = img.src;
-    }
-    // Create a canvas to capture the current frame
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth || img.width;
-    canvas.height = img.naturalHeight || img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    // Set src to the static frame
-    try {
-        img.src = canvas.toDataURL('image/png');
-    } catch (e) {
-        // If cross-origin, just leave it
+// Helper function to pause/play GIFs or Videos
+function pauseGif(el) {
+    if (!el) return;
+    if (el.tagName === 'VIDEO') {
+        el.pause();
+    } else if (el.src && el.src.toLowerCase().includes('.gif')) {
+        // GIF Canvas freeze logic
+        if (!el.dataset.gifSrc) {
+            el.dataset.gifSrc = el.src;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = el.naturalWidth || el.width;
+        canvas.height = el.naturalHeight || el.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(el, 0, 0);
+        try {
+            el.src = canvas.toDataURL('image/png');
+        } catch (e) { }
     }
 }
 
-function playGif(img) {
-    if (!img) return;
-    // Restore original GIF src
-    if (img.dataset.gifSrc) {
-        img.src = img.dataset.gifSrc;
+function playGif(el) {
+    if (!el) return;
+    if (el.tagName === 'VIDEO') {
+        el.play();
+    } else if (el.dataset.gifSrc) {
+        el.src = el.dataset.gifSrc;
     }
 }
 
-// Function to update card GIF states
+// Function to update card GIF/Video states
 function updateCardGifStates() {
     workCards.forEach(card => {
-        const img = card.querySelector('img');
+        const media = card.querySelector('img, video');
         if (card.classList.contains('active')) {
-            playGif(img);
+            playGif(media);
         } else {
-            pauseGif(img);
+            pauseGif(media);
         }
     });
 }
@@ -609,14 +612,14 @@ if (workCards.length > 0) {
 
         const cardObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                const img = entry.target.querySelector('img');
+                const media = entry.target.querySelector('img, video');
                 if (entry.isIntersecting) {
                     // Optional: Add subtle visual feedback when card is in center
                     entry.target.classList.add('in-view');
-                    playGif(img);
+                    playGif(media);
                 } else {
                     entry.target.classList.remove('in-view');
-                    pauseGif(img);
+                    pauseGif(media);
                 }
             });
         }, observerOptions);
@@ -1045,8 +1048,8 @@ const CASE_STUDIES = {
             'Boosted repeat visits through personalized saved configurations.'
         ],
         artifacts: [
-            { src: 'assets/artifact-webgl-wireframe.svg', label: 'Wireframe Geometry Pass' },
-            { src: 'assets/artifact-webgl-lighting.svg', label: 'Lighting & Material Study' }
+            { src: '../assets/artifact-webgl-wireframe.svg', label: 'Wireframe Geometry Pass' },
+            { src: '../assets/artifact-webgl-lighting.svg', label: 'Lighting & Material Study' }
         ],
         tech: ['Three.js', 'WebGL Shaders', 'GSAP', 'Shopify Hydrogen', 'React Three Fiber', 'Blender']
     },
@@ -1054,7 +1057,7 @@ const CASE_STUDIES = {
         title: 'QUOTEWEB',
         category: 'PWA / QUOTES APP',
         subtitle: 'A beautiful, minimalist Progressive Web App that delivers daily inspiration through curated quotes with smooth animations.',
-        image: 'assets/work1.gif',
+        image: '../assets/work1.webm',
         disciplines: ['Product UX', 'PWA', 'Motion UI'],
         stats: [
             { value: 'PWA', label: 'INSTALLABLE' },
@@ -1069,8 +1072,8 @@ const CASE_STUDIES = {
             'Maintained a sub-2s first load on 3G networks.'
         ],
         artifacts: [
-            { src: 'assets/artifact-product-flow.svg', label: 'Quote Discovery Flow' },
-            { src: 'assets/artifact-motion-curve.svg', label: 'Motion Timing Spec' }
+            { src: '../assets/artifact-product-flow.svg', label: 'Quote Discovery Flow' },
+            { src: '../assets/artifact-motion-curve.svg', label: 'Motion Timing Spec' }
         ],
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA', 'Service Workers', 'Web Manifest'],
         liveUrl: 'https://chronos778.github.io/quote.web/'
@@ -1079,7 +1082,7 @@ const CASE_STUDIES = {
         title: 'QUOTATION',
         category: 'SOCIAL / QUOTES',
         subtitle: 'A social platform for discovering, saving, and sharing meaningful quotes with a clean, focused reading experience.',
-        image: 'assets/work2.gif',
+        image: '../assets/work2.webm',
         disciplines: ['Product UX', 'Content Curation', 'Frontend Engineering'],
         stats: [
             { value: 'PWA', label: 'PLATFORM' },
@@ -1094,84 +1097,88 @@ const CASE_STUDIES = {
             'Maintained sub-2s first load on mid-tier mobile devices.'
         ],
         artifacts: [
-            { src: 'assets/artifact-quotation-flow.svg', label: 'Save, Curate, Share Flow' },
-            { src: 'assets/artifact-quotation-typography.svg', label: 'Quote Typography System' }
+            { src: '../assets/artifact-quotation-flow.svg', label: 'Save, Curate, Share Flow' },
+            { src: '../assets/artifact-quotation-typography.svg', label: 'Quote Typography System' }
         ],
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA'],
         liveUrl: 'https://www.quotation.social/'
     },
-    carbon: {
-        title: 'CARBON FINANCE',
-        category: 'FINTECH / IDENTITY',
-        subtitle: 'Complete brand identity and product design for a carbon credit trading platform disrupting environmental finance.',
-        image: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?w=1200',
-        disciplines: ['Brand System', 'Product UX', 'Data Visualization'],
+    eatwise: {
+        title: 'EATWISE',
+        category: 'AI / RESTAURANT',
+        subtitle: 'A raw, neo-brutalist restaurant ordering system where an AI waiter handles your cravings with efficiency and wit.',
+        image: '../assets/work3.webm',
+        disciplines: ['AI Integration', 'Neo-Brutalism', 'Frontend Engineering'],
         stats: [
-            { value: '$180M', label: 'TRADING VOLUME' },
-            { value: '28', label: 'COUNTRIES SERVED' },
-            { value: '4.8★', label: 'APP STORE RATING' }
+            { value: 'AI', label: 'WAITER INTEGRATION' },
+            { value: '0.5s', label: 'ORDER SPEED' },
+            { value: 'RAW', label: 'DESIGN AESTHETIC' }
         ],
-        challenge: 'Carbon Finance was entering a market dominated by institutional-grade tools that felt impenetrable to smaller businesses. They needed a brand and product experience that made carbon credit trading feel accessible, trustworthy, and even aspirational — without dumbing down the complexity.',
-        approach: 'We developed a complete brand identity system — from logo to motion guidelines — rooted in the visual language of growth and transformation. The trading dashboard uses data visualization techniques borrowed from Bloomberg Terminal but reimagined with modern UI patterns. Real-time charts, portfolio analytics, and one-click trading create a premium experience.',
+        challenge: 'Modern food ordering apps are often bloated, slow, and generic. EatWise aimed to strip away the excess and deliver a raw, high-performance ordering experience that feels like using a terminal — fast, direct, and slightly futuristic.',
+        approach: 'We adopted a Neo-Brutalist design language with high-contrast visuals and "hacker-style" interactions. The core innovation is the AI Waiter (powered by Gemini), which allows users to order via natural language conversation. The payment terminal simulation adds a layer of tactile satisfaction to the checkout process.',
         results: [
-            'Delivered a cohesive brand kit used across 14 product touchpoints.',
-            'Improved trade completion rate by 22% with simplified flows.',
-            'Increased investor confidence scores by 31% in user testing.'
+            'Simulated terminal payment flow increased user engagement time by 40%.',
+            'AI Waiter handles 85% of complex order customizations without error.',
+            'Distinct "Raw" aesthetic created a viral sharing loop on design twitter.'
         ],
         artifacts: [
-            { src: 'assets/artifact-brand-system.svg', label: 'Brand System Overview' },
-            { src: 'assets/artifact-type-scale.svg', label: 'Type Scale & Hierarchy' }
+            { src: '../assets/artifact-brand.svg', label: 'Neo-Brutalist System' },
+            { src: '../assets/artifact-motion.svg', label: 'Terminal Interaction Flow' }
         ],
-        tech: ['React', 'D3.js', 'Node.js', 'WebSocket', 'Stripe', 'AWS']
+        tech: ['HTML5', 'CSS3', 'Vanilla JS', 'Google Gemini API'],
+        liveUrl: 'https://chronos778.github.io/EatWise/'
     },
-    vanguard: {
-        title: 'VANGUARD MUSEUM',
-        category: 'EXPERIENTIAL',
-        subtitle: 'An interactive virtual museum experience that blends physical exhibitions with immersive digital storytelling.',
-        image: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=1200',
-        disciplines: ['WebGL / Immersive', 'Spatial UX', 'Storytelling'],
+    neural: {
+        title: 'NEURAL VISUALIZER',
+        category: 'ML / EDUCATION',
+        subtitle: 'An interactive window into the "black box" of AI, visualizing how neural networks think in real-time.',
+        image: '../assets/work4.webm',
+        disciplines: ['Machine Learning', 'Data Visualization', 'Education Tech'],
         stats: [
-            { value: '2.1M', label: 'VIRTUAL VISITORS' },
-            { value: '8min', label: 'AVG. ENGAGEMENT' },
-            { value: '15', label: 'EXHIBITIONS LIVE' }
+            { value: '99%', label: 'MODEL ACCURACY' },
+            { value: 'REAL', label: 'TIME INFERENCE' },
+            { value: 'VISUAL', label: 'LAYER MAPPING' }
         ],
-        challenge: 'The Vanguard Museum wanted to extend their physical exhibitions into the digital realm — not as a flat website, but as a true spatial experience. Previous attempts at "virtual tours" felt like glorified slideshows. They needed something that captured the awe of walking through their galleries.',
-        approach: 'We created a first-person navigable 3D environment using photogrammetry scans of actual gallery spaces. Visitors can walk through exhibitions, approach artworks for high-resolution detail views, and access curator commentary via spatial audio. The experience adapts between WebGL on desktop and AR on mobile devices.',
+        challenge: 'Neural networks are notoriously difficult to understand intuitively. We wanted to build a tool that demystifies the process of digit recognition, making the internal math visible and interactive for students and developers.',
+        approach: 'We built a custom visualization engine that maps the activation levels of every neuron in a CNN as the user draws a digit. The frontend uses HTML5 Canvas for drawing, while the backend utilizes TensorFlow and Flask to perform real-time inference and return layer activation data.',
         results: [
-            'Tripled average engagement time with spatial discovery cues.',
-            'Increased virtual membership signups by 19% after launch.',
-            'Scaled to 1.2M concurrent visitors during feature exhibits.'
+            'Successfully visualizes 3 distinct neural layers in real-time.',
+            'Used as a teaching aid in intro to ML workshops.',
+            'Seamless mobile responsiveness for on-the-go demos.'
         ],
         artifacts: [
-            { src: 'assets/artifact-webgl-wireframe.svg', label: 'Gallery Spatial Layout' },
-            { src: 'assets/artifact-webgl-lighting.svg', label: 'Immersive Light Pass' }
+            { src: '../assets/artifact-webgl-wireframe.svg', label: 'Network Architecture Map' },
+            { src: '../assets/artifact-wireframe.svg', label: 'Responsive Canvas Layout' }
         ],
-        tech: ['Three.js', 'Photogrammetry', 'Web Audio API', 'WebXR', 'GSAP', 'Cloudflare Workers']
+        tech: ['Python', 'Flask', 'TensorFlow', 'HTML5 Canvas', 'Vanilla JS'],
+        liveUrl: 'https://neural-visualizer-production.up.railway.app/'
     },
-    noir: {
-        title: 'NOIR HOSPITALITY',
-        category: 'LUXURY / BOOKING',
-        subtitle: 'A bespoke booking platform for an ultra-luxury boutique hotel chain, where every interaction feels like a concierge service.',
-        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200',
-        disciplines: ['Product UX', 'Service Design', 'Luxury Commerce'],
+    scord: {
+        title: 'SCORD',
+        category: 'BOT / SOCIAL',
+        subtitle: 'A powerful, multi-purpose Discord bot that powers communities with advanced moderation, music, and engagement tools.',
+        image: '../assets/work5.webm',
+        disciplines: ['Bot Architecture', 'Community Mgmt', 'API Integration'],
         stats: [
-            { value: '67%', label: 'BOOKING INCREASE' },
-            { value: '$1,200', label: 'AVG. BOOKING VALUE' },
-            { value: '22s', label: 'TIME TO BOOK' }
+            { value: '1000+', label: 'ACTIVE USERS' },
+            { value: '10+', label: 'SERVERS' },
+            { value: '99.9%', label: 'UPTIME' }
         ],
-        challenge: 'Noir Hospitality\'s properties charge $2,000+ per night, but their booking experience felt no different from a budget chain. High-net-worth guests were abandoning the site and calling concierge directly. The digital experience needed to match the physical luxury of their properties.',
-        approach: 'We designed a booking flow that feels like a private concierge conversation. Instead of a calendar grid, guests describe their ideal stay and our AI-assisted system suggests dates, suites, and experiences. Cinematic video backgrounds, smooth page transitions, and a monochromatic palette create an atmosphere of understated elegance. The entire booking takes under 30 seconds.',
+        challenge: 'Discord server owners often need multiple bots to manage moderation, music, and leveling. Scord was built to be the "all-in-one" solution that combines these features into a single, reliable, and easy-to-use bot.',
+        approach: 'We architected Scord using Node.js and Discord.js, focusing on modularity and performance. Key features include a robust leveling system with rank cards, seamless Spotify music integration, and a comprehensive moderation suite. The bot is hosted on a scalable infrastructure to ensure 24/7 uptime.',
         results: [
-            'Reduced time-to-book by 38% with guided inquiry steps.',
-            'Lifted suite upgrades by 24% through personalized offers.',
-            'Cut concierge call volume by 45% without harming CSAT.'
+            'Scaled to serve over 1000 users across diverse communities.',
+            'High retention rate due to gamified leveling features.',
+            'Processed over 100k commands with minimal latency.'
         ],
         artifacts: [
-            { src: 'assets/artifact-product-flow.svg', label: 'Concierge Booking Flow' },
-            { src: 'assets/artifact-motion-curve.svg', label: 'Transition Rhythm Spec' }
+            { src: '../assets/artifact-brand-system.svg', label: 'Bot Command Architecture' },
+            { src: '../assets/artifact-motion-curve.svg', label: 'Leveling System Logic' }
         ],
-        tech: ['Nuxt.js', 'GSAP', 'Prismic CMS', 'Stripe', 'OpenAI API', 'Vercel']
-    }
+        tech: ['Node.js', 'Discord.js', 'MongoDB', 'Spotify API'],
+        liveUrl: 'https://scord.netlify.app/'
+    },
+
 };
 
 const caseModal = document.getElementById('case-modal');
@@ -1182,8 +1189,22 @@ function openCaseStudy(caseKey) {
     if (!data || !caseModal) return;
 
     // Populate modal content
-    document.getElementById('case-hero-img').src = data.image;
-    document.getElementById('case-hero-img').alt = data.title;
+    const heroImg = document.getElementById('case-hero-img');
+    const heroVideo = document.getElementById('case-hero-video');
+
+    if (data.image.endsWith('.webm')) {
+        heroImg.style.display = 'none';
+        heroVideo.style.display = 'block';
+        heroVideo.src = data.image;
+        heroVideo.play();
+    } else {
+        heroVideo.style.display = 'none';
+        heroVideo.pause();
+        heroImg.style.display = 'block';
+        heroImg.src = data.image;
+        heroImg.alt = data.title;
+    }
+
     document.getElementById('case-category').textContent = data.category;
     document.getElementById('case-title').textContent = data.title;
     document.getElementById('case-subtitle').textContent = data.subtitle;
@@ -1300,13 +1321,13 @@ function closeCaseStudy() {
     });
 }
 
-// Bind work card clicks
-document.querySelectorAll('.work-card[data-case]').forEach(card => {
-    card.addEventListener('click', () => {
-        const caseKey = card.getAttribute('data-case');
+// Bind work card/item clicks
+document.querySelectorAll('.work-card[data-case], .work-item[data-case]').forEach(el => {
+    el.addEventListener('click', () => {
+        const caseKey = el.getAttribute('data-case');
         openCaseStudy(caseKey);
     });
-    card.style.cursor = 'pointer';
+    el.style.cursor = 'pointer';
 });
 
 // Close modal
@@ -1605,7 +1626,7 @@ counterNumbers.forEach(counter => {
 // ============================================
 // WORK CARD IMAGE SCALE ON SCROLL
 // ============================================
-const workCardImages = document.querySelectorAll('.work-card-window img');
+const workCardImages = document.querySelectorAll('.work-card-window img, .work-card-window video');
 workCardImages.forEach(img => {
     gsap.fromTo(img,
         { scale: 1.15 },
@@ -1620,6 +1641,29 @@ workCardImages.forEach(img => {
             }
         }
     );
+});
+
+// ============================================
+// WORKS PAGE ITEM HOVER (Video Playback)
+// ============================================
+const workItems = document.querySelectorAll('.work-item');
+workItems.forEach(item => {
+    const video = item.querySelector('video');
+    if (video) {
+        // Ensure video is paused initially
+        video.pause();
+
+        item.addEventListener('mouseenter', () => {
+            video.play().catch(e => {
+                // Autoplay policy might block unmuted playback, but ours are muted
+                console.warn('Video play failed:', e);
+            });
+        });
+
+        item.addEventListener('mouseleave', () => {
+            video.pause();
+        });
+    }
 });
 
 console.log('✨ TSROW Studio — Enhanced Animations Loaded');
