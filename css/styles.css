@@ -3224,6 +3224,38 @@ html::-webkit-scrollbar {
     max-height: 200px;
 }
 
+/* Budget Input with Prefix */
+.form-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-input-prefix {
+    position: absolute;
+    left: 20px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--white-muted);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.form-input--prefixed {
+    padding-left: 38px;
+}
+
+/* Hide number input spinners */
+.form-input[type="number"]::-webkit-outer-spin-button,
+.form-input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .btn-submit {
     margin-top: 10px;
     width: 100%;

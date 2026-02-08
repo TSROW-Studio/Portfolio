@@ -277,7 +277,7 @@
                 </div>
                 <!-- Button moved outside wrapper -->
                 <div style="text-align: center; margin-top: 60px;">
-                    <a href="html/works.html" class="btn-primary magnetic" data-strength="40">
+                    <a href="works.html" class="btn-primary magnetic" data-strength="40">
                         <span class="btn-text">VIEW ALL WORKS</span>
                         <span class="btn-arrow">→</span>
                     </a>
@@ -452,16 +452,7 @@
                                 <li>WORLDWIDE CLIENTS</li>
                             </ul>
                         </div>
-                        <div class="footer-col footer-col-wide">
-                            <div class="footer-newsletter">
-                                <h4 class="footer-heading">STAY INFORMED</h4>
-                                <p>Get updates on our latest work and studio news.</p>
-                                <form class="newsletter-form">
-                                    <input type="email" placeholder="YOUR EMAIL" class="newsletter-input">
-                                    <button type="submit" class="newsletter-btn magnetic" data-strength="20">→</button>
-                                </form>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="footer-bottom">
                         <div class="footer-logo">TSROW<sup>®</sup></div>
@@ -551,7 +542,15 @@
                         <h2 class="modal-title">LET'S TALK.</h2>
                         <p class="modal-subtitle">Tell us about your vision and we'll respond within 24 hours.</p>
                     </div>
-                    <form class="lead-form" id="lead-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <form class="lead-form" id="lead-form" action="https://api.web3forms.com/submit" method="POST">
+                        <!-- Web3Forms Access Key - Get yours free at https://web3forms.com -->
+                        <input type="hidden" name="access_key" value="5fd5cdb9-13d5-4c9c-bb46-a8e411ecc1ba">
+                        <input type="hidden" name="subject" value="New Project Inquiry - TSROW Studio">
+                        <input type="hidden" name="from_name" value="TSROW Studio Website">
+                        <input type="hidden" name="redirect" value="">
+                        <!-- Honeypot Spam Protection -->
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
                         <div class="form-group">
                             <label class="form-label" for="lead-name">YOUR NAME</label>
                             <input class="form-input" type="text" id="lead-name" name="name" required
@@ -575,14 +574,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="lead-budget">BUDGET RANGE</label>
-                            <select class="form-input form-select" id="lead-budget" name="budget" required>
-                                <option value="" disabled selected>SELECT RANGE</option>
-                                <option value="50-100k">$50K — $100K</option>
-                                <option value="100-250k">$100K — $250K</option>
-                                <option value="250-500k">$250K — $500K</option>
-                                <option value="500k+">$500K+</option>
-                            </select>
+                            <label class="form-label" for="lead-budget">BUDGET (USD)</label>
+                            <div class="form-input-wrapper">
+                                <span class="form-input-prefix">$</span>
+                                <input class="form-input form-input--prefixed" type="number" id="lead-budget"
+                                    name="budget" required min="0" step="100" placeholder="5000">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="lead-message">PROJECT BRIEF</label>

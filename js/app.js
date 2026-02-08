@@ -1048,8 +1048,8 @@ const CASE_STUDIES = {
             'Boosted repeat visits through personalized saved configurations.'
         ],
         artifacts: [
-            { src: '../assets/artifact-webgl-wireframe.svg', label: 'Wireframe Geometry Pass' },
-            { src: '../assets/artifact-webgl-lighting.svg', label: 'Lighting & Material Study' }
+            { src: 'assets/artifact-webgl-wireframe.svg', label: 'Wireframe Geometry Pass' },
+            { src: 'assets/artifact-webgl-lighting.svg', label: 'Lighting & Material Study' }
         ],
         tech: ['Three.js', 'WebGL Shaders', 'GSAP', 'Shopify Hydrogen', 'React Three Fiber', 'Blender']
     },
@@ -1057,7 +1057,7 @@ const CASE_STUDIES = {
         title: 'QUOTEWEB',
         category: 'PWA / QUOTES APP',
         subtitle: 'A beautiful, minimalist Progressive Web App that delivers daily inspiration through curated quotes with smooth animations.',
-        image: '../assets/work1.webm',
+        image: 'assets/work1.webm',
         disciplines: ['Product UX', 'PWA', 'Motion UI'],
         stats: [
             { value: 'PWA', label: 'INSTALLABLE' },
@@ -1072,8 +1072,8 @@ const CASE_STUDIES = {
             'Maintained a sub-2s first load on 3G networks.'
         ],
         artifacts: [
-            { src: '../assets/artifact-product-flow.svg', label: 'Quote Discovery Flow' },
-            { src: '../assets/artifact-motion-curve.svg', label: 'Motion Timing Spec' }
+            { src: 'assets/artifact-product-flow.svg', label: 'Quote Discovery Flow' },
+            { src: 'assets/artifact-motion-curve.svg', label: 'Motion Timing Spec' }
         ],
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA', 'Service Workers', 'Web Manifest'],
         liveUrl: 'https://chronos778.github.io/quote.web/'
@@ -1082,7 +1082,7 @@ const CASE_STUDIES = {
         title: 'QUOTATION',
         category: 'SOCIAL / QUOTES',
         subtitle: 'A social platform for discovering, saving, and sharing meaningful quotes with a clean, focused reading experience.',
-        image: '../assets/work2.webm',
+        image: 'assets/work2.webm',
         disciplines: ['Product UX', 'Content Curation', 'Frontend Engineering'],
         stats: [
             { value: 'PWA', label: 'PLATFORM' },
@@ -1097,8 +1097,8 @@ const CASE_STUDIES = {
             'Maintained sub-2s first load on mid-tier mobile devices.'
         ],
         artifacts: [
-            { src: '../assets/artifact-quotation-flow.svg', label: 'Save, Curate, Share Flow' },
-            { src: '../assets/artifact-quotation-typography.svg', label: 'Quote Typography System' }
+            { src: 'assets/artifact-quotation-flow.svg', label: 'Save, Curate, Share Flow' },
+            { src: 'assets/artifact-quotation-typography.svg', label: 'Quote Typography System' }
         ],
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA'],
         liveUrl: 'https://www.quotation.social/'
@@ -1107,7 +1107,7 @@ const CASE_STUDIES = {
         title: 'EATWISE',
         category: 'AI / RESTAURANT',
         subtitle: 'A raw, neo-brutalist restaurant ordering system where an AI waiter handles your cravings with efficiency and wit.',
-        image: '../assets/work3.webm',
+        image: 'assets/work3.webm',
         disciplines: ['AI Integration', 'Neo-Brutalism', 'Frontend Engineering'],
         stats: [
             { value: 'AI', label: 'WAITER INTEGRATION' },
@@ -1122,8 +1122,8 @@ const CASE_STUDIES = {
             'Distinct "Raw" aesthetic created a viral sharing loop on design twitter.'
         ],
         artifacts: [
-            { src: '../assets/artifact-brand.svg', label: 'Neo-Brutalist System' },
-            { src: '../assets/artifact-motion.svg', label: 'Terminal Interaction Flow' }
+            { src: 'assets/artifact-brand.svg', label: 'Neo-Brutalist System' },
+            { src: 'assets/artifact-motion.svg', label: 'Terminal Interaction Flow' }
         ],
         tech: ['HTML5', 'CSS3', 'Vanilla JS', 'Google Gemini API'],
         liveUrl: 'https://chronos778.github.io/EatWise/'
@@ -1132,7 +1132,7 @@ const CASE_STUDIES = {
         title: 'NEURAL VISUALIZER',
         category: 'ML / EDUCATION',
         subtitle: 'An interactive window into the "black box" of AI, visualizing how neural networks think in real-time.',
-        image: '../assets/work4.webm',
+        image: 'assets/work4.webm',
         disciplines: ['Machine Learning', 'Data Visualization', 'Education Tech'],
         stats: [
             { value: '99%', label: 'MODEL ACCURACY' },
@@ -1147,8 +1147,8 @@ const CASE_STUDIES = {
             'Seamless mobile responsiveness for on-the-go demos.'
         ],
         artifacts: [
-            { src: '../assets/artifact-webgl-wireframe.svg', label: 'Network Architecture Map' },
-            { src: '../assets/artifact-wireframe.svg', label: 'Responsive Canvas Layout' }
+            { src: 'assets/artifact-webgl-wireframe.svg', label: 'Network Architecture Map' },
+            { src: 'assets/artifact-wireframe.svg', label: 'Responsive Canvas Layout' }
         ],
         tech: ['Python', 'Flask', 'TensorFlow', 'HTML5 Canvas', 'Vanilla JS'],
         liveUrl: 'https://neural-visualizer-production.up.railway.app/'
@@ -1157,7 +1157,7 @@ const CASE_STUDIES = {
         title: 'SCORD',
         category: 'BOT / SOCIAL',
         subtitle: 'A powerful, multi-purpose Discord bot that powers communities with advanced moderation, music, and engagement tools.',
-        image: '../assets/work5.webm',
+        image: 'assets/work5.webm',
         disciplines: ['Bot Architecture', 'Community Mgmt', 'API Integration'],
         stats: [
             { value: '1000+', label: 'ACTIVE USERS' },
@@ -1172,8 +1172,8 @@ const CASE_STUDIES = {
             'Processed over 100k commands with minimal latency.'
         ],
         artifacts: [
-            { src: '../assets/artifact-brand-system.svg', label: 'Bot Command Architecture' },
-            { src: '../assets/artifact-motion-curve.svg', label: 'Leveling System Logic' }
+            { src: 'assets/artifact-brand-system.svg', label: 'Bot Command Architecture' },
+            { src: 'assets/artifact-motion-curve.svg', label: 'Leveling System Logic' }
         ],
         tech: ['Node.js', 'Discord.js', 'MongoDB', 'Spotify API'],
         liveUrl: 'https://scord.netlify.app/'
@@ -1401,7 +1401,7 @@ if (contactModal) {
     });
 }
 
-// Form submission (Formspree or custom handler)
+// Form submission (Web3Forms or mailto fallback)
 if (leadForm) {
     leadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1411,8 +1411,15 @@ if (leadForm) {
         submitBtn.querySelector('.btn-text').textContent = 'SENDING...';
         submitBtn.disabled = true;
 
+        // Gather form data for fallback
+        const formData = new FormData(leadForm);
+        const name = formData.get('name') || '';
+        const email = formData.get('email') || '';
+        const projectType = formData.get('project_type') || '';
+        const budget = formData.get('budget') || '';
+        const message = formData.get('message') || '';
+
         try {
-            const formData = new FormData(leadForm);
             const response = await fetch(leadForm.action, {
                 method: 'POST',
                 body: formData,
@@ -1432,8 +1439,26 @@ if (leadForm) {
                 throw new Error('Form submission failed');
             }
         } catch (error) {
-            // Fallback: open mailto
-            submitBtn.querySelector('.btn-text').textContent = 'ERROR — TRY EMAIL';
+            // Fallback: open mailto with formatted body
+            const subject = encodeURIComponent('New Project Inquiry - TSROW Studio');
+            const body = encodeURIComponent(
+                `NEW PROJECT INQUIRY
+
+Name: ${name}
+Email: ${email}
+Project Type: ${projectType}
+Budget: $${budget}
+
+Project Brief:
+${message}
+
+---
+Sent from TSROW Studio website`
+            );
+
+            window.location.href = `mailto:tsrowstudio@gmail.com?subject=${subject}&body=${body}`;
+
+            submitBtn.querySelector('.btn-text').textContent = 'OPENING EMAIL...';
             setTimeout(() => {
                 submitBtn.querySelector('.btn-text').textContent = originalText;
                 submitBtn.disabled = false;
