@@ -1098,7 +1098,7 @@ const CASE_STUDIES = {
             { src: 'assets/artifact-quotation-typography.svg', label: 'Quote Typography System' }
         ],
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA'],
-        githubUrl: 'https://github.com/SC136/Quotation'
+        liveUrl: 'https://www.quotation.social/'
     },
     carbon: {
         title: 'CARBON FINANCE',
