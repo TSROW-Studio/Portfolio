@@ -556,17 +556,45 @@ function updateCardGifStates() {
     });
 }
 
+function animateWorkCardFlex(activeCard) {
+    if (PREFERS_REDUCED_MOTION) return;
+
+    gsap.to(workCards, {
+        flexGrow: 1,
+        duration: 0.9,
+        ease: 'power3.out',
+        overwrite: 'auto'
+    });
+
+    if (activeCard) {
+        gsap.to(activeCard, {
+            flexGrow: 6,
+            duration: 1,
+            ease: 'power3.out',
+            overwrite: 'auto'
+        });
+    }
+}
+
 if (workCards.length > 0) {
     // Set initial state
     workCards[0].classList.add('active');
+
+    // Check if touch device
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    if (!isMobile) {
+        // Ensure initial flex-grow matches the active card for smooth transitions
+        workCards.forEach(card => {
+            const isActive = card.classList.contains('active');
+            gsap.set(card, { flexGrow: isActive ? 6 : 1 });
+        });
+    }
 
     // Initial GIF states - pause all non-active, play active
     setTimeout(() => {
         updateCardGifStates();
     }, 100);
-
-    // Check if touch device
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
     if (isMobile) {
         // Mobile: Use IntersectionObserver to activate cards as they scroll into view
@@ -606,7 +634,7 @@ if (workCards.length > 0) {
             }, { passive: true });
         });
     } else {
-        // Desktop: Keep original hover behavior
+        // Desktop: Keep original hover behavior with smooth flex animation
         workCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
                 // Deactivate all others
@@ -615,6 +643,8 @@ if (workCards.length > 0) {
                 card.classList.add('active');
                 // Update GIF states
                 updateCardGifStates();
+                // Animate flex transition
+                animateWorkCardFlex(card);
             });
         });
     }

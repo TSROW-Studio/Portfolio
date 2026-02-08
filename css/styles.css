@@ -894,6 +894,7 @@ body.cursor-hover .cursor-label {
     transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1);
     overflow: hidden;
     cursor: pointer;
+    will-change: flex-grow;
 }
 
 .work-card.active {
