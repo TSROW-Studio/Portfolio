@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <rect width="1200" height="800" fill="#0b0b0b"/>
+  <rect x="40" y="40" width="1120" height="720" stroke="#2a2a2a"/>
+  <g fill="#f5f5f5" font-family="Arial, sans-serif">
+    <text x="120" y="140" font-size="54" letter-spacing="2">QUOTE TYPE SYSTEM</text>
+    <text x="120" y="210" font-size="24" fill="#9a9a9a">Hierarchy - Rhythm - Contrast</text>
+  </g>
+  <g stroke="#5a5a5a" stroke-width="1">
+    <line x1="120" y1="260" x2="1080" y2="260"/>
+    <line x1="120" y1="520" x2="1080" y2="520"/>
+  </g>
+  <g fill="#f5f5f5" font-family="Georgia, serif">
+    <text x="140" y="340" font-size="44">"We design silence into the interface"</text>
+    <text x="140" y="410" font-size="28" fill="#c0c0c0">Lightweight reading modes and calm emphasis</text>
+  </g>
+  <g fill="#f5f5f5" font-family="Georgia, serif">
+    <text x="140" y="600" font-size="34">"Save, return, repeat"</text>
+    <text x="140" y="650" font-size="20" fill="#9a9a9a">Compact line height for scanning</text>
+  </g>
+  <g fill="#f5f5f5">
+    <path d="M980 620c0-20 16-36 36-36h36v108h-72v-72zm108 0c0-20 16-36 36-36h36v108h-72v-72z"/>
+  </g>
+</svg>

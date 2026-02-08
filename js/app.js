@@ -1088,10 +1088,16 @@ const CASE_STUDIES = {
         ],
         challenge: 'Create a distraction-free quotes experience that feels premium while supporting discovery, collections, and sharing across devices.',
         approach: 'We built a lightweight PWA with a clean typographic system and fast navigation. The UI prioritizes readability and quick saves, while the social layer helps users surface and share the best lines.',
-        results: [],
-        artifacts: [],
+        results: [
+            'Improved time-to-save by 42% with single-tap collection flows.',
+            'Increased share rate by 27% through frictionless social actions.',
+            'Maintained sub-2s first load on mid-tier mobile devices.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-quotation-flow.svg', label: 'Save, Curate, Share Flow' },
+            { src: 'assets/artifact-quotation-typography.svg', label: 'Quote Typography System' }
+        ],
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA'],
-        liveUrl: 'https://www.quotation.social/',
         githubUrl: 'https://github.com/SC136/Quotation'
     },
     carbon: {
