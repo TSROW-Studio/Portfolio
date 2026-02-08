@@ -769,57 +769,91 @@ lenis.on('scroll', (e) => {
 });
 
 // ============================================
-// MARQUEE SPEED BASED ON SCROLL
+// PREMIUM MARQUEE LOOP
 // ============================================
-// ============================================
-// SMOOTH SCROLL VELOCITY MARQUEE
-// ============================================
+const marqueeSection = document.querySelector('.section-marquee');
 const marqueeTrack = document.querySelector('.marquee-track');
-const marqueeItems = document.querySelectorAll('.marquee-text');
+let marqueeTween = null;
+let marqueeBaseItems = [];
+let marqueeScrollBound = false;
 
-if (marqueeTrack && marqueeItems.length > 0) {
-    let progress = 0;
-    let baseSpeed = 0.5; // Pixels per frame
-    let scrollSpeed = 0; // Added velocity
+function buildMarquee() {
+    if (!marqueeSection || !marqueeTrack || PREFERS_REDUCED_MOTION) return;
 
-    // Calculate total width of one set of text
-    // Assuming simple duplication for loop
-    const itemWidth = marqueeItems[0].offsetWidth;
+    if (marqueeTween) marqueeTween.kill();
+    marqueeTrack.querySelectorAll('[data-marquee-clone="true"]').forEach(el => el.remove());
 
-    function animateMarquee() {
-        // Smoothly decay scroll speed influence
-        scrollSpeed *= 0.95;
-
-        // Combined speed
-        const currentSpeed = baseSpeed + scrollSpeed;
-
-        // Move
-        progress -= currentSpeed;
-
-        // Loop logic: when we've moved past one item width, reset
-        // The track typically contains 2 copies. We slide left.
-        // When abs(progress) >= width, we add width to progress
-        if (Math.abs(progress) >= itemWidth) {
-            progress += itemWidth;
-        }
-
-        // Apply transform
-        // translate3d for GPU perf
-        marqueeTrack.style.transform = `translate3d(${progress}px, 0, 0)`;
-
-        requestAnimationFrame(animateMarquee);
+    if (marqueeBaseItems.length === 0) {
+        marqueeBaseItems = Array.from(marqueeTrack.children);
     }
 
-    // Start loop
-    requestAnimationFrame(animateMarquee);
+    const isMobileMarquee = window.matchMedia('(max-width: 768px)').matches;
+    const containerWidth = marqueeSection.getBoundingClientRect().width;
+    const fillMultiplier = isMobileMarquee ? 1.5 : 2;
+    let trackWidth = marqueeTrack.scrollWidth;
 
-    // Inject scroll velocity from Lenis
-    lenis.on('scroll', (e) => {
-        // Add scroll velocity to marquee speed
-        // Sensitivity factor 0.2
-        scrollSpeed += Math.abs(e.velocity) * 0.2;
+    while (trackWidth < containerWidth * fillMultiplier) {
+        marqueeBaseItems.forEach(item => {
+            const clone = item.cloneNode(true);
+            clone.setAttribute('data-marquee-clone', 'true');
+            marqueeTrack.appendChild(clone);
+        });
+        trackWidth = marqueeTrack.scrollWidth;
+    }
+
+    const loopDistance = trackWidth / 2;
+    gsap.set(marqueeTrack, { x: 0 });
+    marqueeTween = gsap.to(marqueeTrack, {
+        x: -loopDistance,
+        duration: isMobileMarquee ? 20 : 28,
+        ease: 'none',
+        repeat: -1
     });
+
+    if (!marqueeScrollBound) {
+        lenis.on('scroll', (e) => {
+            if (!marqueeTween) return;
+            const velocity = Math.abs(e.velocity);
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            // Reduced intensity on mobile for smoother feel
+            const maxBoost = isMobile ? 1.5 : 2.5;
+            const velocityDivisor = isMobile ? 80 : 50;
+            const skewMultiplier = isMobile ? 0.03 : 0.08;
+            const maxSkew = isMobile ? 3 : 6;
+
+            const speedBoost = Math.min(maxBoost, velocity / velocityDivisor);
+            const skew = gsap.utils.clamp(-maxSkew, maxSkew, e.velocity * skewMultiplier);
+
+            gsap.to(marqueeTween, {
+                timeScale: 1 + speedBoost,
+                duration: 0.35,
+                ease: 'power2.out'
+            });
+
+            gsap.to(marqueeTrack, {
+                skewX: skew,
+                duration: 0.25,
+                ease: 'power3.out'
+            });
+
+            gsap.to(marqueeTrack, {
+                skewX: 0,
+                duration: 0.9,
+                ease: 'power3.out'
+            });
+        });
+        marqueeScrollBound = true;
+    }
 }
+
+buildMarquee();
+
+let marqueeResizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(marqueeResizeTimer);
+    marqueeResizeTimer = setTimeout(() => buildMarquee(), 250);
+});
 
 // ============================================
 // TEXT SCRAMBLE EFFECT
