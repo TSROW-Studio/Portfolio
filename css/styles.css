@@ -681,12 +681,14 @@ body.cursor-hover .cursor-label {
     padding: clamp(30px, 5vh, 60px) 0;
     border-top: 1px solid var(--grid-line);
     border-bottom: 1px solid var(--grid-line);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
 }
 
 .marquee {
     display: flex;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
 }
 
 .marquee-track {
@@ -700,6 +702,7 @@ body.cursor-hover .cursor-label {
     font-size: clamp(1.5rem, 4vw, 3rem);
     font-weight: 400;
     letter-spacing: 0.1em;
+    line-height: 1.05;
     white-space: nowrap;
     padding-right: 50px;
     color: var(--white-muted);

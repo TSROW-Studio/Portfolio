@@ -1041,29 +1041,24 @@ const CASE_STUDIES = {
         tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA', 'Service Workers', 'Web Manifest'],
         liveUrl: 'https://chronos778.github.io/quote.web/'
     },
-    onyx: {
-        title: 'ONYX ARCHIVES',
-        category: 'ARCHIVAL SYSTEM',
-        subtitle: 'A next-generation digital archive for one of the world\'s largest private art collections, built for preservation and discovery.',
-        image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=1200',
-        disciplines: ['Product UX', 'Information Architecture', 'Search Systems'],
+    quotation: {
+        title: 'QUOTATION',
+        category: 'SOCIAL / QUOTES',
+        subtitle: 'A social platform for discovering, saving, and sharing meaningful quotes with a clean, focused reading experience.',
+        image: 'assets/work2.gif',
+        disciplines: ['Product UX', 'Content Curation', 'Frontend Engineering'],
         stats: [
-            { value: '50K+', label: 'ARTWORKS INDEXED' },
-            { value: '99.9%', label: 'UPTIME SLA' },
-            { value: '<200ms', label: 'SEARCH LATENCY' }
+            { value: 'PWA', label: 'PLATFORM' },
+            { value: 'SOCIAL', label: 'FOCUS' },
+            { value: 'OPEN', label: 'SOURCE' }
         ],
-        challenge: 'The Onyx Foundation owned over 50,000 artworks spanning five centuries, but their cataloging system was fragmented across spreadsheets, legacy databases, and physical index cards. Researchers had no unified way to search, cross-reference, or discover connections between pieces.',
-        approach: 'We designed a headless CMS architecture with a custom search engine powered by vector embeddings for semantic art discovery. The interface uses a masonry grid with infinite scroll, high-DPI zoom capabilities, and a timeline visualization that maps the entire collection chronologically. Every detail was crafted for art historians and curators.',
-        results: [
-            'Cut archival lookup time from hours to under 3 minutes.',
-            'Uncovered 1,200+ cross-collection relationships via semantic search.',
-            'Reduced curator onboarding time by 60% with guided workflows.'
-        ],
-        artifacts: [
-            { src: 'assets/artifact-product-flow.svg', label: 'Researcher Journey Map' },
-            { src: 'assets/artifact-type-scale.svg', label: 'Catalog Typography System' }
-        ],
-        tech: ['Next.js', 'Sanity CMS', 'Algolia', 'PostgreSQL', 'Cloudinary', 'Figma']
+        challenge: 'Create a distraction-free quotes experience that feels premium while supporting discovery, collections, and sharing across devices.',
+        approach: 'We built a lightweight PWA with a clean typographic system and fast navigation. The UI prioritizes readability and quick saves, while the social layer helps users surface and share the best lines.',
+        results: [],
+        artifacts: [],
+        tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA'],
+        liveUrl: 'https://www.quotation.social/',
+        githubUrl: 'https://github.com/SC136/Quotation'
     },
     carbon: {
         title: 'CARBON FINANCE',
