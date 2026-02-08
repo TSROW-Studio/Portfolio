@@ -120,8 +120,8 @@
 
                     <div class="works-grid">
                         <!-- 1. QuoteWeb -->
-                        <div class="work-item" data-cursor="VIEW CASE">
-                            <img src="assets/work1.gif" alt="QuoteWeb">
+                        <div class="work-item" data-case="quoteweb" data-cursor="VIEW CASE">
+                            <img src="assets/work1.gif" alt="QuoteWeb" loading="lazy">
                             <div class="work-item-info">
                                 <h3>QUOTEWEB</h3>
                                 <span>PWA / QUOTES APP</span>
@@ -129,8 +129,8 @@
                         </div>
 
                         <!-- 2. Quotation -->
-                        <div class="work-item" data-cursor="VIEW CASE">
-                            <img src="assets/work2.gif" alt="Quotation">
+                        <div class="work-item" data-case="quotation" data-cursor="VIEW CASE">
+                            <img src="assets/work2.gif" alt="Quotation" loading="lazy">
                             <div class="work-item-info">
                                 <h3>QUOTATION</h3>
                                 <span>SOCIAL / QUOTES</span>
@@ -138,9 +138,9 @@
                         </div>
 
                         <!-- 3. Carbon Finance -->
-                        <div class="work-item" data-cursor="VIEW CASE">
+                        <div class="work-item" data-case="carbon" data-cursor="VIEW CASE">
                             <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?w=800"
-                                alt="Carbon Finance">
+                                alt="Carbon Finance" loading="lazy">
                             <div class="work-item-info">
                                 <h3>CARBON FINANCE</h3>
                                 <span>FINTECH / IDENTITY</span>
@@ -148,9 +148,9 @@
                         </div>
 
                         <!-- 4. Vanguard Museum -->
-                        <div class="work-item" data-cursor="VIEW CASE">
+                        <div class="work-item" data-case="vanguard" data-cursor="VIEW CASE">
                             <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=800"
-                                alt="Vanguard Museum">
+                                alt="Vanguard Museum" loading="lazy">
                             <div class="work-item-info">
                                 <h3>VANGUARD MUSEUM</h3>
                                 <span>EXPERIENTIAL</span>
@@ -158,9 +158,9 @@
                         </div>
 
                         <!-- 5. Noir Hospitality -->
-                        <div class="work-item" data-cursor="VIEW CASE">
+                        <div class="work-item" data-case="noir" data-cursor="VIEW CASE">
                             <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
-                                alt="Noir Hospitality">
+                                alt="Noir Hospitality" loading="lazy">
                             <div class="work-item-info">
                                 <h3>NOIR HOSPITALITY</h3>
                                 <span>LUXURY / BOOKING</span>
@@ -170,7 +170,7 @@
                         <!-- Placeholders -->
                         <div class="work-item" data-cursor="COMING SOON">
                             <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800"
-                                alt="Project Alpha">
+                                alt="Project Alpha" loading="lazy">
                             <div class="work-item-info">
                                 <h3>PROJECT ALPHA</h3>
                                 <span>AI / INTERFACE</span>
@@ -179,7 +179,7 @@
 
                         <div class="work-item" data-cursor="COMING SOON">
                             <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=800"
-                                alt="Project Beta">
+                                alt="Project Beta" loading="lazy">
                             <div class="work-item-info">
                                 <h3>PROJECT BETA</h3>
                                 <span>WEBGL / IMMERSIVE</span>
@@ -188,7 +188,7 @@
 
                         <div class="work-item" data-cursor="COMING SOON">
                             <img src="https://images.unsplash.com/photo-1618005198910-a522119f12d6?w=800"
-                                alt="Project Gamma">
+                                alt="Project Gamma" loading="lazy">
                             <div class="work-item-info">
                                 <h3>PROJECT GAMMA</h3>
                                 <span>ECOMMERCE</span>
@@ -197,7 +197,7 @@
 
                         <div class="work-item" data-cursor="COMING SOON">
                             <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800"
-                                alt="Project Delta">
+                                alt="Project Delta" loading="lazy">
                             <div class="work-item-info">
                                 <h3>PROJECT DELTA</h3>
                                 <span>CYBERSECURITY</span>
@@ -222,6 +222,59 @@
 
         </div>
     </main>
+
+    <!-- ======================= -->
+    <!-- CASE STUDY MODAL         -->
+    <!-- ======================= -->
+    <div class="modal-overlay" id="case-modal">
+        <div class="modal-container">
+            <button class="modal-close" id="case-modal-close" aria-label="Close modal">
+                <span></span><span></span>
+            </button>
+            <div class="modal-scroll" data-lenis-prevent>
+                <div class="modal-hero">
+                    <img class="modal-hero-img" id="case-hero-img" src="" alt="">
+                    <div class="modal-hero-overlay"></div>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-header">
+                        <span class="modal-category" id="case-category"></span>
+                        <h2 class="modal-title" id="case-title"></h2>
+                        <p class="modal-subtitle" id="case-subtitle"></p>
+                    </div>
+                    <div class="modal-stats" id="case-stats"></div>
+                    <div class="modal-disciplines">
+                        <span class="modal-label">DISCIPLINES</span>
+                        <div class="modal-discipline-tags" id="case-disciplines"></div>
+                    </div>
+                    <div class="modal-content">
+                        <div class="modal-grid">
+                            <div class="modal-section">
+                                <h3>THE CHALLENGE</h3>
+                                <p id="case-challenge"></p>
+                            </div>
+                            <div class="modal-section">
+                                <h3>OUR APPROACH</h3>
+                                <p id="case-approach"></p>
+                            </div>
+                        </div>
+                        <div class="modal-section">
+                            <h3>RESULTS</h3>
+                            <ul class="modal-results" id="case-results"></ul>
+                        </div>
+                        <div class="modal-section modal-artifacts">
+                            <h3>ARTIFACTS</h3>
+                            <div class="modal-artifact-grid" id="case-artifacts"></div>
+                        </div>
+                        <div class="modal-section">
+                            <h3>TECHNOLOGIES</h3>
+                            <div class="modal-tech-tags" id="case-tech"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

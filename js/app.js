@@ -1294,8 +1294,8 @@ function closeCaseStudy() {
     });
 }
 
-// Bind work card clicks
-document.querySelectorAll('.work-card[data-case]').forEach(card => {
+// Bind work card clicks (home page and works page)
+document.querySelectorAll('.work-card[data-case], .work-item[data-case]').forEach(card => {
     card.addEventListener('click', () => {
         const caseKey = card.getAttribute('data-case');
         openCaseStudy(caseKey);
