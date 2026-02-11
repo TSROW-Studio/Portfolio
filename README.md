@@ -6,9 +6,7 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![WebGL](https://img.shields.io/badge/WebGL-990000?style=flat-square&logo=webgl&logoColor=white)
 
-A premium, cinematic portfolio website built with vanilla technologies. Features WebGL shaders, GSAP animations, smooth scrolling, and luxury microinteractions.
-
-![Preview](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&h=600&fit=crop)
+A premium, cinematic portfolio website built with vanilla technologies. Features WebGL shaders, GSAP animations, smooth scrolling, and luxury microinteractions. Now includes a dedicated "Selected Works" showcase with performance-optimized video previews.
 
 ---
 
@@ -20,6 +18,7 @@ A premium, cinematic portfolio website built with vanilla technologies. Features
 - **Cinematic Preloader** — Character-by-character logo reveal with progress bar
 - **Smooth Scrolling** — Lenis-powered inertia scrolling
 - **Scene-Based Navigation** — 7 distinct content sections with live indicator
+- **Selected Works Showcase** — Dedicated project gallery with high-performance video previews
 
 ### Typography & Animation
 
@@ -27,6 +26,7 @@ A premium, cinematic portfolio website built with vanilla technologies. Features
 - **Text Scramble Effect** — Hacker-style text resolution on hover
 - **3D Character Reveals** — RotateX transforms for depth
 - **Counter Animations** — Numbers animate up on scroll
+- **Performance Optimized** — All GIF assets converted to efficient WebM video format
 
 ### Interactions
 
@@ -40,11 +40,11 @@ A premium, cinematic portfolio website built with vanilla technologies. Features
 ## 🛠 Tech Stack
 
 | Technology | Purpose |
-|------------|---------|
+| :--- | :--- |
 | HTML5 | Semantic structure |
 | CSS3 | Custom properties, Grid, Flexbox, Clamp |
 | Vanilla JavaScript | No frameworks, pure ES6+ |
-| WebGL / GLSL | Shader-based background |
+| Three.js / WebGL | Shader-based background & effects |
 | GSAP 3.12 | Animation engine |
 | ScrollTrigger | Scroll-based animations |
 | Lenis | Smooth scroll |
@@ -54,15 +54,16 @@ A premium, cinematic portfolio website built with vanilla technologies. Features
 
 ## 📁 Project Structure
 
-```
+```text
 tsrow/
 ├── index.html          # Main entry point (7 sections)
+├── works.html          # Selected works gallery page
 ├── css/
-│   └── styles.css      # Complete design system (~900 lines)
 ├── js/
 │   ├── app.js          # Main application logic
 │   └── background.js   # WebGL shader engine
-├── assets/             # Project images (add your own)
+├── assets/             # Images & optimized WebM videos
+├── convert-gif-to-webm.ps1 # Optimization utility script
 ├── README.md
 ├── LICENSE
 └── .gitignore
@@ -138,16 +139,16 @@ All text content is in `index.html`. Replace placeholder copy with your own.
 The site is fully responsive with:
 
 - Fluid typography using `clamp()`
-- Mobile-optimized navigation
-- Touch-friendly interactions
-- Reduced motion support for accessibility
+- Mobile-optimized navigation with hamburger menu
+- Horizontal scrolling category bars for touch devices
+- Touch-friendly interactions and reduced motion support
 
 ---
 
 ## 🔧 Browser Support
 
 | Browser | Support |
-|---------|---------|
+| :--- | :--- |
 | Chrome | ✅ Full |
 | Firefox | ✅ Full |
 | Safari | ✅ Full |
