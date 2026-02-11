@@ -34,3 +34,6 @@ npm-debug.log*
 # Misc
 *.bak
 *.tmp
+
+# Scripts
+convert-gif-to-webm.ps1

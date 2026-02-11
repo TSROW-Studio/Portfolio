@@ -1178,6 +1178,31 @@ const CASE_STUDIES = {
         tech: ['Node.js', 'Discord.js', 'MongoDB', 'Spotify API'],
         liveUrl: 'https://scord.netlify.app/'
     },
+    recipebook: {
+        title: 'RECIPE BOOK',
+        category: 'PWA / FOOD DISCOVERY',
+        subtitle: 'A beautifully curated recipe discovery platform with offline support, dark mode, and intuitive filtering for food enthusiasts.',
+        image: 'assets/work6.webm',
+        disciplines: ['Product UX', 'PWA', 'Food Discovery'],
+        stats: [
+            { value: 'OFFLINE', label: 'CAPABLE' },
+            { value: 'DARK', label: 'MODE' },
+            { value: '15+', label: 'RECIPES' }
+        ],
+        challenge: 'Creating an intuitive recipe discovery platform that works seamlessly online and offline, with a beautiful interface that makes browsing recipes feel effortless. The app needed to support recipe search, category filtering, and provide a delightful dark mode experience.',
+        approach: 'Built as a Progressive Web App with offline-first architecture using Service Workers. Features include category-based filtering (breakfast, lunch, dinner, dessert), recipe search functionality, a featured recipe section, and a responsive design that works flawlessly on all devices. Dark mode toggle enhances the reading experience for evening browsing.',
+        results: [
+            'Achieved 100% offline availability with cached recipe data.',
+            'Increased user engagement through intuitive category discovery.',
+            'Maintained fast performance with optimized image loading and lazy rendering.'
+        ],
+        artifacts: [
+            { src: 'assets/artifact-product-flow.svg', label: 'Recipe Discovery Flow' },
+            { src: 'assets/artifact-motion-curve.svg', label: 'Category Filter System' }
+        ],
+        tech: ['HTML5', 'CSS3', 'JavaScript', 'PWA', 'Service Workers', 'Dark Mode'],
+        liveUrl: 'https://sc.is-a.dev/recipe-book/'
+    },
 
 };
 
