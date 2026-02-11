@@ -871,7 +871,7 @@ class TextScramble {
 
     scramble() {
         this.queue = [];
-        const length = this.originalText.length;
+        const length = this.originalText;
 
         for (let i = 0; i < length; i++) {
             const from = this.randomChar();
